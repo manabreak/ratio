@@ -8,7 +8,6 @@ public class LayerPresenter extends MvpPresenter<LayerUi> {
 
     private final PublishSubject<TileLayer> layerCreatedSubject = PublishSubject.create();
     private final PublishSubject<TileLayer> layerSelectedSubject = PublishSubject.create();
-    private final PublishSubject<TileLayer> layerRemovedSubject = PublishSubject.create();
     private LayerListAdapter adapter;
     private Level level;
     private TileLayer selectedLayer;
@@ -34,18 +33,6 @@ public class LayerPresenter extends MvpPresenter<LayerUi> {
         System.out.println("Clicked layer " + layer.getName());
         this.selectedLayer = layer;
         layerSelectedSubject.onNext(layer);
-    }
-
-    public PublishSubject<TileLayer> getLayerSelectedSubject() {
-        return layerSelectedSubject;
-    }
-
-    public PublishSubject<TileLayer> getLayerRemovedSubject() {
-        return layerRemovedSubject;
-    }
-
-    public PublishSubject<TileLayer> getLayerCreatedSubject() {
-        return layerCreatedSubject;
     }
 
     public void moveLayerUp() {

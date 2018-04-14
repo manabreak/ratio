@@ -53,22 +53,6 @@ public class GdxJsonExporter implements Exporter {
 
         JsonValue root = new JsonValue(JsonValue.ValueType.object);
 
-        /*
-        BoundingBox bounds = level.getBounds();
-        JsonValue boundsJson = new JsonValue(JsonValue.ValueType.object);
-        JsonValue bMin = new JsonValue(JsonValue.ValueType.array);
-        bMin.addChild(new JsonValue(bounds.min.x));
-        bMin.addChild(new JsonValue(bounds.min.y));
-        bMin.addChild(new JsonValue(bounds.min.z));
-        JsonValue bMax = new JsonValue(JsonValue.ValueType.array);
-        bMax.addChild(new JsonValue(bounds.max.x));
-        bMax.addChild(new JsonValue(bounds.max.y));
-        bMax.addChild(new JsonValue(bounds.max.z));
-        boundsJson.addChild("min", bMin);
-        boundsJson.addChild("max", bMax);
-        root.addChild("bounds", boundsJson);
-        */
-
         // Level properties
         writeProperties(level, properties, root);
 

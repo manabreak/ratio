@@ -59,24 +59,9 @@ public class EditorCameraPlugin extends EditorPlugin implements LoopListener {
 
         Vector3 d = oldScr.sub(newScr);
         cam.translate(d.scl(CAM_PAN_SPEED_MOUSE * dt));
-
-        /*
-        Vector3 d = new Vector3(-dx, 0f, -dy);
-        d = d.nor();
-        d.scl(dt * CAM_PAN_SPEED_MOUSE, 1f, dt * CAM_PAN_SPEED_MOUSE * 2f);
-        cam.translate(d);
-        */
     }
 
     private void handleOrthographicCamera(float dt, OrthographicCamera cam) {
-        /*
-        if (Gdx.input.isKeyPressed(Input.Keys.COMMA)) {
-            cam.zoom += dt * 0.1f;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.PERIOD)) {
-            cam.zoom -= dt * 0.1f;
-        }
-        */
-
         if (camDistance != 0f) {
             cam.zoom = MathUtils.lerp(cam.zoom, camDistance / 100f, dt * 8f);
         }
@@ -134,7 +119,6 @@ public class EditorCameraPlugin extends EditorPlugin implements LoopListener {
             int dy = shouldRotate ? Gdx.input.getDeltaY() : lastDy;
 
             cam.rotateAround(p, Vector3.Y, (float) dx * dt * -20f);
-            // cam.rotateAround(p, Vector3.X, (float) dy * dt * -20f);
             cam.up.set(0f, 1f, 0f);
 
             lastDx = (int) (dx * 0.9f);

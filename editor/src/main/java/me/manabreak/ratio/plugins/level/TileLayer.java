@@ -1,7 +1,5 @@
 package me.manabreak.ratio.plugins.level;
 
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 import me.manabreak.ratio.plugins.tilesets.Tileset;
 
 import java.util.LinkedHashMap;
@@ -54,89 +52,14 @@ public class TileLayer {
         y = y - y % size;
         z = z - z % size;
 
-        try {
-            addCell(tileset, x, y, z, size, part);
-        } catch (AutomapMissingException e) {
-            // e.printStackTrace();
-            System.out.println("Automap: No automap for size " + size + "(" + e.getMessage() + ")");
-        }
+        addCell(x, y, z, size, part);
     }
 
-    private void addCell(Tileset tileset, int x, int y, int z, int size, Octree<Cell> part) throws AutomapMissingException {
+    private void addCell(int x, int y, int z, int size, Octree<Cell> part) {
         Cell cell = new Cell(x, y, z);
         cell.setSize(size);
         part.insert(x, y, z, size, cell);
-
-        /*
-        if (autoPaint) {
-            autoPaint(tileset, x, y, z, size, part);
-            autoPaint(tileset, x + size, y, z, size, part);
-            autoPaint(tileset, x - size, y, z, size, part);
-            autoPaint(tileset, x, y + size, z, size, part);
-            autoPaint(tileset, x, y - size, z, size, part);
-            autoPaint(tileset, x, y, z + size, size, part);
-            autoPaint(tileset, x, y, z - size, size, part);
-        }
-        */
     }
-
-    /*
-    private void autoPaint(Tileset tileset, int x, int y, int z, int size, Octree<Cell> part) throws AutomapMissingException {
-        if (tileset != null && autoPaint && part.get(x, y, z, size) != null) {
-            boolean hasTop = part.get(x, y + size, z, size) != null;
-            boolean hasFront = part.get(x, y, z + size, size) != null;
-            boolean hasBack = part.get(x, y, z - size, size) != null;
-            boolean hasLeft = part.get(x - size, y, z, size) != null;
-            boolean hasRight = part.get(x + size, y, z, size) != null;
-
-            // Top must be painted?
-            int i = 0;
-            if (!hasTop) {
-                if (hasRight) i += 1;
-                if (hasBack) i += 2;
-                if (hasLeft) i += 4;
-                if (hasFront) i += 8;
-
-                paint(tileset, x, y, z, size, Face.TOP, tileset.getAutomapTile(i, size));
-            }
-
-            // Front must be painted?
-            i = 16;
-            if (!hasFront) {
-                if (hasRight) i += 1;
-                if (hasLeft) i += 2;
-                paint(tileset, x, y, z, size, Face.FRONT, tileset.getAutomapTile(i, size));
-            }
-
-            i = 16;
-            if (!hasLeft) {
-                if (hasFront) i += 1;
-                if (hasBack) i += 2;
-                paint(tileset, x, y, z, size, Face.LEFT, tileset.getAutomapTile(i, size));
-            }
-
-            i = 16;
-            if (!hasRight) {
-                if (hasBack) i += 1;
-                if (hasFront) i += 2;
-                paint(tileset, x, y, z, size, Face.RIGHT, tileset.getAutomapTile(i, size));
-            }
-
-            i = 16;
-            if (!hasBack) {
-                if (hasLeft) i += 1;
-                if (hasRight) i += 2;
-                paint(tileset, x, y, z, size, Face.BACK, tileset.getAutomapTile(i, size));
-            }
-        }
-    }
-    */
-
-    /*
-    public void paint(Tileset tileset, int x, int y, int z, int size, Face face) {
-        paint(tileset, x, y, z, size, face, tileset.createTile(currentRegion));
-    }
-    */
 
     public void paint(Tileset tileset, int x, int y, int z, int size, Face face, Tile tile) {
         Octree<Cell> part = getPart(tileset);
@@ -157,41 +80,10 @@ public class TileLayer {
         y = y - y % size;
         z = z - z % size;
         part.remove(x, y, z, size);
-
-
-        /*
-        try {
-            autoPaint(tileset, x, y, z, size, part);
-            autoPaint(tileset, x + size, y, z, size, part);
-            autoPaint(tileset, x - size, y, z, size, part);
-            autoPaint(tileset, x, y + size, z, size, part);
-            autoPaint(tileset, x, y - size, z, size, part);
-            autoPaint(tileset, x, y, z + size, size, part);
-            autoPaint(tileset, x, y, z - size, size, part);
-        } catch (AutomapMissingException e) {
-            e.printStackTrace();
-        }
-        */
     }
 
     public Map<Tileset, Octree<Cell>> getParts() {
         return parts;
-    }
-
-    public BoundingBox getBounds() {
-        Vector3 min = new Vector3(10000f, 10000f, 10000f);
-        Vector3 max = new Vector3(0f, 0f, 0f);
-        for (Octree<Cell> tree : parts.values()) {
-            for (Cell cell : tree.flatten()) {
-                min.x = Math.min(min.x, cell.getX());
-                min.y = Math.min(min.y, cell.getY());
-                min.z = Math.min(min.z, cell.getZ());
-                max.x = Math.max(max.x, cell.getX());
-                max.y = Math.max(max.y, cell.getY());
-                max.z = Math.max(max.z, cell.getZ());
-            }
-        }
-        return new BoundingBox(min, max);
     }
 
     public String getName() {

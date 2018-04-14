@@ -12,8 +12,6 @@ import java.util.List;
 
 public interface EditorView extends InputProcessor {
 
-    <T extends Actor> Cell<T> addView(T view, EditorPanel panel);
-
     void setToolView(VisTable content);
 
     void addLeftPanelTab(String title, VisTable content);

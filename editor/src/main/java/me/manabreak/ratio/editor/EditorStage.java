@@ -5,7 +5,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -82,29 +81,6 @@ public class EditorStage extends Stage implements EditorView {
         // mainContent.add(bottomPanel).colspan(3).growX().height(32f);
 
         root.pack();
-    }
-
-    @Override
-    public <T extends Actor> Cell<T> addView(T view, EditorPanel panel) {
-        if (panel == EditorPanel.NONE) {
-            VisTable table = new VisTable(true);
-            table.setSize(getWidth(), getHeight());
-            addActor(table);
-            return table.add(view);
-        }
-
-        switch (panel) {
-            case LEFT:
-                return leftTabs.add(view);
-            case RIGHT:
-                return rightPanel.add(view);
-            case TOP:
-                return topPanel.add(view);
-            // case BOTTOM:
-            // return bottomPanel.add(view);
-        }
-
-        throw new IllegalStateException("Unknown panel type " + panel);
     }
 
     @Override

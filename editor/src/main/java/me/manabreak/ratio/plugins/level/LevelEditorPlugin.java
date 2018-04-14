@@ -219,24 +219,6 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
                     }
                 }
                 break;
-                /*
-            case Input.Keys.P:
-                if (cellSize < 32) {
-                    cellSize <<= 1;
-                    cf = cellSize / 16f;
-                    tilesetUi.updateToolSize(cellSize);
-                    tilesetUi.createPicker(editorController.getTilesetManager().getCurrentTileset());
-                }
-                return true;
-            case Input.Keys.O:
-                if (cellSize > 1) {
-                    cellSize >>= 1;
-                    cf = cellSize / 16f;
-                    tilesetUi.updateToolSize(cellSize);
-                    tilesetUi.createPicker(editorController.getTilesetManager().getCurrentTileset());
-                }
-                return true;
-                */
             case Input.Keys.F1:
                 wireframe = !wireframe;
                 return true;
