@@ -1,0 +1,41 @@
+
+editor.png
+size: 512,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+arrow_left
+  rotate: false
+  xy: 1, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+close
+  rotate: false
+  xy: 100, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+cursor-default
+  rotate: false
+  xy: 298, 49
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+folder
+  rotate: false
+  xy: 199, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+plus-box
+  rotate: false
+  xy: 349, 49
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
