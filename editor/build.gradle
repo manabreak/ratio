@@ -1,7 +1,8 @@
 apply plugin: "application"
 apply plugin: "idea"
 
-project.ext.mainClassName = "me.manabreak.ratio.EditorLauncher"
+mainClassName = "me.manabreak.ratio.EditorLauncher"
+project.ext.mainClassName = mainClassName
 project.ext.assetsDir = new File("assets")
 sourceCompatibility = 1.8
 
