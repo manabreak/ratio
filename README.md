@@ -1,4 +1,4 @@
-# Ratio Editor
+# Ratio Editor [![Build Status](https://travis-ci.org/manabreak/ratio.svg?branch=master)](https://travis-ci.org/manabreak/ratio)
 
 Ratio Editor is a voxel editor with some extra features.
 
