@@ -1,5 +1,6 @@
 apply plugin: "application"
 apply plugin: "idea"
+apply plugin: "jacoco"
 
 mainClassName = "me.manabreak.ratio.EditorLauncher"
 project.ext.mainClassName = mainClassName
@@ -40,3 +41,12 @@ task dist(type: Jar) {
 }
 
 dist.dependsOn classes
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+check.dependsOn jacocoTestReport
