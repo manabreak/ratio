@@ -7,7 +7,6 @@ public class Cell {
     private Map<Face, Integer> faces = new EnumMap<>(Face.class);
     private int x, y, z;
     private int size = 1;
-    private int meshIndex = -1;
     private Type type = Type.BLOCK;
 
     public Cell(int x, int y, int z) {
@@ -42,10 +41,6 @@ public class Cell {
     public Integer get(Face face) {
         return faces.get(face);
     }
-
-    // public void set(Fac, Tile tile) {
-    //     faces.put(face, tile);
-    // }
 
     public void clear(Face face) {
         faces.put(face, 0);

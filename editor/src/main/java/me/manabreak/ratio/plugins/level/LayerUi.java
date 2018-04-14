@@ -68,18 +68,4 @@ public class LayerUi extends MvpView<LayerPresenter> {
         content.add(listView.getMainTable()).grow().top().pad(2f);
         listView.setItemClickListener(presenter::layerClicked);
     }
-
-    /*
-    private Actor createFooter() {
-        VisTable footer = new VisTable();
-        footer.add("Here be footer").growX();
-        return footer;
-    }
-
-    private VisTable createHeader() {
-        VisTable header = new VisTable();
-        header.add("Here be header").growX();
-        return header;
-    }
-    */
 }
