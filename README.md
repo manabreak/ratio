@@ -1,9 +1,9 @@
 # Ratio Editor [![Build Status](https://travis-ci.org/manabreak/ratio.svg?branch=master)](https://travis-ci.org/manabreak/ratio) 
 [![codecov](https://codecov.io/gh/manabreak/ratio/branch/master/graph/badge.svg)](https://codecov.io/gh/manabreak/ratio)
 
-[![Imgur](https://i.imgur.com/NILRZ0P.png)](https://i.imgur.com/NILRZ0P.png)
+Ratio Editor is a voxel editor with some extra features. Download @ [itch.io](https://manabreak.itch.io/ratio-editor)
 
-Ratio Editor is a voxel editor with some extra features.
+[![Imgur](https://i.imgur.com/NILRZ0P.png)](https://i.imgur.com/NILRZ0P.png)
 
 ## Building and running
 
