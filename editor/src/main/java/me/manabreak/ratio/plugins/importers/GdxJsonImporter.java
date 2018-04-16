@@ -50,6 +50,12 @@ public class GdxJsonImporter implements Importer {
         String json = fh.readString();
         JsonValue root = new JsonReader().parse(json);
 
+        final JsonValue tilesetsJson = root.get("tilesets");
+        for (JsonValue jsonTileset : tilesetsJson) {
+            Tileset tileset = parseTileset(fh, jsonTileset);
+            level.addTileset(tileset);
+        }
+
         final JsonValue layers = root.get("layers");
         for (JsonValue jsonLayer : layers) {
             TileLayer layer = level.createLayer(jsonLayer.getString("name"));
@@ -57,7 +63,8 @@ public class GdxJsonImporter implements Importer {
 
             JsonValue parts = jsonLayer.get("parts");
             for (JsonValue part : parts) {
-                Tileset tileset = parseTileset(fh, part.get("tileset"));
+                int tilesetIndex = part.getInt("tileset");
+                Tileset tileset = level.getTileset(tilesetIndex);
 
                 JsonValue cells = part.get("cells");
                 for (JsonValue cell : cells) {
