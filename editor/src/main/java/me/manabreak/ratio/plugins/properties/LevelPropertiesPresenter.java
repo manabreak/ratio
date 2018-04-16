@@ -7,6 +7,7 @@ import me.manabreak.ratio.common.mvp.MvpPresenter;
 public class LevelPropertiesPresenter extends MvpPresenter<LevelPropertiesUi> implements PropertyHandler {
 
     private Properties properties = new Properties();
+    private PropertyAdapter adapter;
 
     public void createBooleanProperty(String key) {
         properties.setProperty(key, true);
@@ -51,5 +52,9 @@ public class LevelPropertiesPresenter extends MvpPresenter<LevelPropertiesUi> im
     public void loadProperties(Properties properties) {
         this.properties = properties;
         view.showProperties(properties);
+    }
+
+    public void viewCreated() {
+        view.createListView(adapter);
     }
 }

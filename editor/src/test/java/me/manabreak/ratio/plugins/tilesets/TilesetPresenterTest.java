@@ -31,7 +31,7 @@ public class TilesetPresenterTest {
     private TilesetPresenter presenter;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         presenter = new TilesetPresenter(plugin, manager);
         presenter.attachView(view);
     }

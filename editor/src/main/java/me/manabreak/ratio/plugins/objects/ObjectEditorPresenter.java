@@ -1,5 +1,6 @@
 package me.manabreak.ratio.plugins.objects;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 import me.manabreak.ratio.common.mvp.MvpPresenter;
@@ -58,6 +59,7 @@ public class ObjectEditorPresenter extends MvpPresenter<ObjectEditorUi> implemen
     }
 
     public void createBooleanProperty(String key) {
+        if (detailedItem == null) return;
         detailedItem.setProperty(key, true);
         view.showDetails(detailedItem);
     }
@@ -81,10 +83,6 @@ public class ObjectEditorPresenter extends MvpPresenter<ObjectEditorUi> implemen
     public void createIntProperty(String key) {
         detailedItem.setProperty(key, 0);
         view.showDetails(detailedItem);
-    }
-
-    public void nameChanged(GameObject item, String name) {
-        item.setName(name);
     }
 
     public void typeChanged(GameObject item, String text) {
@@ -172,6 +170,13 @@ public class ObjectEditorPresenter extends MvpPresenter<ObjectEditorUi> implemen
         } else {
             adapter.getSelectionManager().deselectAll();
             view.hideDetails();
+        }
+    }
+
+    public void onKeyEvent(int keycode) {
+        if (keycode == Input.Keys.FORWARD_DEL && selectedObject != null) {
+            removeObject(selectedObject);
+            setSelection(null);
         }
     }
 }

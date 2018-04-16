@@ -125,7 +125,7 @@ public class GdxJsonExporter implements Exporter {
 
     private void writeProperties(Level level, Properties properties, JsonValue root) {
         JsonValue props = new JsonValue(JsonValue.ValueType.array);
-        for (Map.Entry<String, Object> entry : properties.getProperties().entrySet()) {
+        for (Properties.Entry entry : properties.getProperties()) {
             JsonValue prop = new JsonValue(JsonValue.ValueType.object);
 
             String key = entry.getKey();

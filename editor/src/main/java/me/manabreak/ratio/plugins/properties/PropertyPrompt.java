@@ -1,17 +1,17 @@
 package me.manabreak.ratio.plugins.properties;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
-import com.kotcrab.vis.ui.widget.VisTable;
 import me.manabreak.ratio.ui.UiUtils;
 
 public class PropertyPrompt extends ChangeListener {
-    private final VisTable parent;
+    private final Table parent;
     private final PropertyHandler propertyHandler;
 
-    public PropertyPrompt(VisTable parent, PropertyHandler propertyHandler) {
+    public PropertyPrompt(Table parent, PropertyHandler propertyHandler) {
         this.parent = parent;
         this.propertyHandler = propertyHandler;
     }
@@ -59,6 +59,6 @@ public class PropertyPrompt extends ChangeListener {
         });
         menu.addItem(vec3Item);
 
-        menu.showMenu(parent.getStage(), actor.getX(), actor.getY());
+        menu.showMenu(parent.getStage(), parent);
     }
 }

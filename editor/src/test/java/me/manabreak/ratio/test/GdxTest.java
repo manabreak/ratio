@@ -5,9 +5,13 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisTextButton;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.mockito.Mockito;
+
+import static org.mockito.Mockito.mock;
 
 public abstract class GdxTest {
     // This is our "test" application
@@ -44,8 +48,14 @@ public abstract class GdxTest {
         });
 
         // Use Mockito to mock the OpenGL methods since we are running headlessly
-        Gdx.gl20 = Mockito.mock(GL20.class);
+        Gdx.gl20 = mock(GL20.class);
         Gdx.gl = Gdx.gl20;
+        VisUI.load();
+        final Skin skin = VisUI.getSkin();
+
+        // Fake the icons style for tests
+        final VisTextButton.VisTextButtonStyle style = skin.get("default", VisTextButton.VisTextButtonStyle.class);
+        skin.add("icons-small", style);
     }
 
     // After we are done, clean up the application
@@ -53,6 +63,7 @@ public abstract class GdxTest {
     public static void cleanUp() {
         // Exit the application first
         application.exit();
+        VisUI.dispose(true);
         application = null;
     }
 }

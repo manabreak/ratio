@@ -1,21 +1,16 @@
 package me.manabreak.ratio.plugins.objects;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
+import me.manabreak.ratio.common.Properties;
 import me.manabreak.ratio.common.mvp.MvpView;
+import me.manabreak.ratio.plugins.properties.PropertyAdapter;
 import me.manabreak.ratio.plugins.properties.PropertyPrompt;
-import me.manabreak.ratio.ui.IntegerTextFieldFilter;
 import me.manabreak.ratio.ui.NumericTextFieldFilter;
-
-import java.util.Map;
 
 public class ObjectEditorUi extends MvpView<ObjectEditorPresenter> {
 
@@ -29,7 +24,7 @@ public class ObjectEditorUi extends MvpView<ObjectEditorPresenter> {
     protected ObjectEditorUi(ObjectEditorPresenter presenter) {
         super(presenter);
 
-        toolRegion = new VisTable(true);
+        toolRegion = new VisTable();
         add(toolRegion).growX().pad(4f);
 
         VisTextButton btnAdd = new VisTextButton("New Object", new ChangeListener() {
@@ -42,28 +37,28 @@ public class ObjectEditorUi extends MvpView<ObjectEditorPresenter> {
 
         row().pad(2f);
 
-        objectListRegion = new VisTable(true);
-        add(objectListRegion).pad(4f).growX();
+        objectListRegion = new VisTable();
+        add(objectListRegion).pad(4f).growX().maxHeight(200f);
 
         row().pad(2f);
 
-        objectDetailsRegion = new VisTable(true);
-        add(objectDetailsRegion).grow().pad(4f);
+        objectDetailsRegion = new VisTable();
+        add(objectDetailsRegion).grow().minHeight(300f);
         objectDetailsRegion.setVisible(false);
 
-        objectBasicDetailsRegion = new VisTable(true);
-        objectDetailsRegion.add(objectBasicDetailsRegion).growX().pad(4f);
+        objectBasicDetailsRegion = new VisTable();
+        objectDetailsRegion.add(objectBasicDetailsRegion).growX();
         objectDetailsRegion.row();
 
-        objectPropertyActionsRegion = new VisTable(true);
+        objectPropertyActionsRegion = new VisTable();
         VisTextButton btnAddProperty = new VisTextButton("Add Property");
-        btnAddProperty.addListener(new PropertyPrompt(this, presenter));
-        objectPropertyActionsRegion.add(btnAddProperty).pad(4f);
-        objectDetailsRegion.add(objectPropertyActionsRegion).growX().pad(4f);
+        btnAddProperty.addListener(new PropertyPrompt(btnAddProperty, presenter));
+        objectPropertyActionsRegion.add(btnAddProperty);
+        objectDetailsRegion.add(objectPropertyActionsRegion).growX();
         objectDetailsRegion.row();
 
-        objectPropertyListRegion = new VisTable(true);
-        objectDetailsRegion.add(objectPropertyListRegion).grow().pad(4f);
+        objectPropertyListRegion = new VisTable();
+        objectDetailsRegion.add(objectPropertyListRegion).grow();
 
         presenter.viewCreated();
     }
@@ -76,8 +71,11 @@ public class ObjectEditorUi extends MvpView<ObjectEditorPresenter> {
         System.out.println("Showing details for item " + item.getName());
         objectDetailsRegion.setVisible(true);
         objectBasicDetailsRegion.clear();
+        objectBasicDetailsRegion.defaults()
+                .height(20f)
+                .pad(1f);
         objectBasicDetailsRegion.columnDefaults(0)
-                .width(100f).padRight(4f);
+                .width(140f).padRight(4f);
         objectBasicDetailsRegion.columnDefaults(1)
                 .growX();
 
@@ -123,133 +121,11 @@ public class ObjectEditorUi extends MvpView<ObjectEditorPresenter> {
         objectBasicDetailsRegion.row();
 
         objectPropertyListRegion.clear();
-
-        VisTable content = new VisTable(true);
-        content.columnDefaults(0)
-                .width(Value.percentWidth(0.5f));
-        content.columnDefaults(1)
-                .width(Value.percentWidth(0.5f));
-
-        for (Map.Entry<String, Object> entry : item.getProperties().getProperties().entrySet()) {
-            String key = entry.getKey();
-
-            VisTable keyContainer = new VisTable(true);
-            VisTextButton btnRemove = new VisTextButton("-", new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    presenter.removeProperty(key);
-                }
-            });
-            keyContainer.add(btnRemove).top().padRight(4f).minWidth(32f);
-
-            VisLabel lblKey = new VisLabel(key);
-            lblKey.setEllipsis(true);
-            keyContainer.add(lblKey).top().padRight(4f);
-            content.add(keyContainer).top();
-
-            Object value = entry.getValue();
-            if (value instanceof String) {
-                VisTextField tfValue = new VisTextField((String) value);
-                tfValue.setTextFieldListener((textField, c) -> {
-                    presenter.changePropertyValue(key, tfValue.getText());
-                });
-                content.add(tfValue).growX();
-            } else if (value instanceof Boolean) {
-                VisCheckBox cbValue = new VisCheckBox("", (Boolean) value);
-                cbValue.addListener(new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent event, Actor actor) {
-                        presenter.changePropertyValue(key, cbValue.isChecked());
-                    }
-                });
-                content.add(cbValue).growX();
-            } else if (value instanceof Integer) {
-                VisTextField tfValue = new VisTextField(value.toString());
-                tfValue.setTextFieldFilter(new IntegerTextFieldFilter(true));
-                tfValue.setTextFieldListener((textField, c) -> {
-                    try {
-                        int val = Integer.parseInt(tfValue.getText());
-                        presenter.changePropertyValue(key, val);
-                    } catch (NumberFormatException ignored) {
-
-                    }
-                });
-                content.add(tfValue).growX();
-            } else if (value instanceof Double) {
-                VisTextField tfValue = new VisTextField(value.toString());
-                tfValue.setTextFieldFilter(new NumericTextFieldFilter());
-                tfValue.setTextFieldListener((textField, c) -> {
-                    try {
-                        double val = Double.parseDouble(tfValue.getText());
-                        presenter.changePropertyValue(key, val);
-                    } catch (NumberFormatException ignored) {
-
-                    }
-                });
-                content.add(tfValue).growX();
-            } else if (value instanceof Vector3) {
-                Vector3 v = (Vector3) value;
-
-                VisTable vecContainer = new VisTable(true);
-
-                VisTextField tfX = new VisTextField("" + v.x);
-                tfX.setTextFieldFilter(new NumericTextFieldFilter());
-                tfX.setTextFieldListener(((textField, c) -> {
-                    try {
-                        v.x = Float.parseFloat(tfX.getText());
-                    } catch (NumberFormatException ignored) {
-
-                    }
-                }));
-                vecContainer.add(tfX).growX();
-                vecContainer.row();
-
-                VisTextField tfY = new VisTextField("" + v.y);
-                tfY.setTextFieldFilter(new NumericTextFieldFilter());
-                tfY.setTextFieldListener(((textField, c) -> {
-                    try {
-                        v.y = Float.parseFloat(tfY.getText());
-                    } catch (NumberFormatException ignored) {
-
-                    }
-                }));
-                vecContainer.add(tfY).growX();
-                vecContainer.row();
-
-                VisTextField tfZ = new VisTextField("" + v.z);
-                tfZ.setTextFieldFilter(new NumericTextFieldFilter());
-                tfZ.setTextFieldListener(((textField, c) -> {
-                    try {
-                        v.z = Float.parseFloat(tfZ.getText());
-                    } catch (NumberFormatException ignored) {
-
-                    }
-                }));
-                vecContainer.add(tfZ).growX();
-
-                content.add(vecContainer);
-
-                VisTextButton btnNormalize = new VisTextButton("Nor", new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent event, Actor actor) {
-                        v.nor();
-                        tfX.setText("" + v.x);
-                        tfY.setText("" + v.y);
-                        tfZ.setText("" + v.z);
-                    }
-                });
-                keyContainer.row();
-                keyContainer.add(btnNormalize);
-            }
-
-            content.row();
-            content.addSeparator().colspan(2);
-            content.row();
-        }
-
-        ScrollPane scrollPane = new ScrollPane(content);
-        scrollPane.setScrollingDisabled(true, false);
-        objectPropertyListRegion.add(scrollPane).grow().align(Align.top);
+        final PropertyAdapter adapter = new PropertyAdapter(item.getProperties());
+        adapter.setDeleteCallback(entry -> presenter.removeProperty(entry.getKey()));
+        ListView<Properties.Entry> propertyListView = new ListView<>(adapter);
+        propertyListView.getScrollPane().setScrollingDisabled(false, false);
+        objectPropertyListRegion.add(propertyListView.getMainTable()).grow().top();
     }
 
     private void createNumberField(float initialValue, String labelText, VisTextField.TextFieldListener listener) {

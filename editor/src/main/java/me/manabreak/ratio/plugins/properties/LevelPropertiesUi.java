@@ -1,16 +1,13 @@
 package me.manabreak.ratio.plugins.properties;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.widget.*;
 import me.manabreak.ratio.common.Properties;
 import me.manabreak.ratio.common.mvp.MvpView;
 import me.manabreak.ratio.ui.IntegerTextFieldFilter;
 import me.manabreak.ratio.ui.NumericTextFieldFilter;
-
-import java.util.Map;
+import me.manabreak.ratio.ui.Res;
 
 public class LevelPropertiesUi extends MvpView<LevelPropertiesPresenter> {
 
@@ -21,8 +18,9 @@ public class LevelPropertiesUi extends MvpView<LevelPropertiesPresenter> {
         top();
 
         VisTable controls = new VisTable();
-        VisTextButton btnAddProperty = new VisTextButton("Add Property");
-        btnAddProperty.addListener(new PropertyPrompt(this, presenter));
+        VisTextButton btnAddProperty = new VisTextButton(Res.ICON_ADD, Res.ICONS_SMALL);
+        new Tooltip.Builder("Add Property").target(btnAddProperty).build();
+        btnAddProperty.addListener(new PropertyPrompt(btnAddProperty, presenter));
         controls.add(btnAddProperty);
         add(controls).expandX();
 
@@ -30,19 +28,13 @@ public class LevelPropertiesUi extends MvpView<LevelPropertiesPresenter> {
         addSeparator();
         row();
 
-        content.top();
-        content.columnDefaults(1)
-                .width(100f).padRight(4f);
-        content.columnDefaults(2)
-                .growX();
-
-        ScrollPane pane = new ScrollPane(content);
-        add(pane).expand();
+        add(content).grow();
+        presenter.viewCreated();
     }
 
     public void showProperties(Properties props) {
         content.clear();
-        for (Map.Entry<String, Object> entry : props.getProperties().entrySet()) {
+        for (Properties.Entry entry : props.getProperties()) {
             String key = entry.getKey();
 
             VisTextButton btnRemove = new VisTextButton("-", new ChangeListener() {
@@ -100,5 +92,9 @@ public class LevelPropertiesUi extends MvpView<LevelPropertiesPresenter> {
 
             content.row();
         }
+    }
+
+    public void createListView(PropertyAdapter adapter) {
+
     }
 }

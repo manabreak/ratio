@@ -21,6 +21,7 @@ public class ObjectEditorPlugin extends EditorPlugin {
         ui = new ObjectEditorUi(new ObjectEditorPresenter());
         table.add(ui).grow();
         editorView.addLeftPanelTab("Objects", table);
+        editorController.registerInputProcessor(this);
     }
 
     public ObjectEditorPresenter getPresenter() {
@@ -50,5 +51,11 @@ public class ObjectEditorPlugin extends EditorPlugin {
         }
 
         getPresenter().setSelection(null);
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        ui.getPresenter().onKeyEvent(keycode);
+        return super.keyUp(keycode);
     }
 }
