@@ -53,8 +53,4 @@ public class LevelPropertiesPresenter extends MvpPresenter<LevelPropertiesUi> im
         this.properties = properties;
         view.showProperties(properties);
     }
-
-    public void viewCreated() {
-        view.createListView(adapter);
-    }
 }
