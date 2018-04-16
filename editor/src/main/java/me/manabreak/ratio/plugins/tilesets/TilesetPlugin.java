@@ -19,5 +19,10 @@ public class TilesetPlugin extends EditorPlugin {
 
     public void levelLoaded(Level level) {
         // TODO
+        for (Tileset tileset : level.getTilesets()) {
+            ui.createTab(tileset);
+            final boolean palette = tileset instanceof PaletteTileset;
+            ui.createPicker(tileset, palette ? 1 : 16, palette ? 1 : 16);
+        }
     }
 }

@@ -12,6 +12,7 @@ import me.manabreak.ratio.plugins.tilesets.PaletteTileset;
 import me.manabreak.ratio.plugins.tilesets.Tileset;
 import me.manabreak.ratio.utils.TextUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +54,22 @@ public class GdxJsonExporter implements Exporter {
 
         JsonValue root = new JsonValue(JsonValue.ValueType.object);
 
+        List<Tileset> tilesets = new ArrayList<>();
+        for (TileLayer layer : level.getLayers()) {
+            for (Tileset tileset : layer.getParts().keySet()) {
+                if (!tilesets.contains(tileset)) {
+                    tilesets.add(tileset);
+                }
+            }
+        }
+
+        JsonValue tilesetsJson = new JsonValue(JsonValue.ValueType.array);
+        for (Tileset tileset : tilesets) {
+            // Tileset
+            writeTileset(tileset, tilesetsJson);
+        }
+        root.addChild("tilesets", tilesetsJson);
+
         // Level properties
         writeProperties(level, properties, root);
 
@@ -67,8 +84,8 @@ public class GdxJsonExporter implements Exporter {
             for (Tileset tileset : layer.getParts().keySet()) {
                 JsonValue jsonPart = new JsonValue(JsonValue.ValueType.object);
 
-                // Tileset
-                writeTileset(tileset, jsonPart);
+                // Index of the tileset in the tileset json portion
+                jsonPart.addChild("tileset", new JsonValue(tilesets.indexOf(tileset)));
 
                 // Tree
                 Octree<Cell> octree = layer.getParts().get(tileset);
@@ -216,6 +233,6 @@ public class GdxJsonExporter implements Exporter {
         }
         jsonTileset.addChild("tiles", tiles);
 
-        root.addChild("tileset", jsonTileset);
+        root.addChild(jsonTileset);
     }
 }

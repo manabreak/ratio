@@ -111,8 +111,20 @@ public class GdxJsonExporterTest {
         System.out.println(jsonString);
 
         JsonValue val = new JsonReader().parse(jsonString);
-        assertTrue(val.has("layers"));
 
+        assertTrue(val.has("tilesets"));
+        JsonValue tilesets = val.get("tilesets");
+        assertEquals(2, tilesets.size);
+
+        JsonValue imageTilesetPart = tilesets.get(0);
+        assertEquals("normal", imageTilesetPart.getString("type"));
+        assertEquals(2, imageTilesetPart.get("tiles").size);
+
+        JsonValue paletteTilesetPart = tilesets.get(1);
+        assertEquals("palette", paletteTilesetPart.getString("type"));
+        assertEquals(3, paletteTilesetPart.get("tiles").size);
+
+        assertTrue(val.has("layers"));
         JsonValue layers = val.get("layers");
         assertEquals(1, layers.size);
 
@@ -120,13 +132,8 @@ public class GdxJsonExporterTest {
         assertTrue(layerJson.has("parts"));
         assertEquals(2, layerJson.get("parts").size);
 
-        JsonValue imageTilesetPart = layerJson.get("parts").get(0);
-        assertEquals("normal", imageTilesetPart.get("tileset").getString("type"));
-        assertEquals(2, imageTilesetPart.get("tileset").get("tiles").size);
-
-        JsonValue paletteTilesetPart = layerJson.get("parts").get(1);
-        assertEquals("palette", paletteTilesetPart.get("tileset").getString("type"));
-        assertEquals(3, paletteTilesetPart.get("tileset").get("tiles").size);
+        assertEquals(0, layerJson.get("parts").get(0).getInt("tileset"));
+        assertEquals(1, layerJson.get("parts").get(1).getInt("tileset"));
 
         assertTrue(val.has("objects"));
         JsonValue objects = val.get("objects");
