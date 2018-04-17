@@ -10,12 +10,10 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import me.manabreak.ratio.editor.EditorPlugin;
 import me.manabreak.ratio.editor.LoopListener;
 import me.manabreak.ratio.plugins.camera.EditorCamera;
-import me.manabreak.ratio.plugins.objects.GameObject;
 import me.manabreak.ratio.plugins.objects.ObjectEditorPlugin;
 import me.manabreak.ratio.plugins.scene.EditorGrid;
 import me.manabreak.ratio.plugins.tilesets.Tileset;
@@ -98,6 +96,10 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
         editorView.setRightPanelTop(layerUi);
 
         final ToolPresenter toolPresenter = new ToolPresenter();
+        toolPresenter.getToolSizeObservable().subscribe(size -> {
+            this.cellSize = size;
+            this.cf = size / 16f;
+        });
         toolView = new ToolView(toolPresenter);
         editorView.setToolView(toolView);
     }

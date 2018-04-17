@@ -1,12 +1,16 @@
 package me.manabreak.ratio.plugins.toolbar;
 
+import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import me.manabreak.ratio.common.mvp.MvpPresenter;
 import me.manabreak.ratio.editor.EditorView;
+import me.manabreak.ratio.plugins.camera.CameraSnapMode;
 
 public class ToolbarPresenter extends MvpPresenter<ToolbarUi> {
 
     private final PublishSubject<Tool> toolSubject = PublishSubject.create();
+    private final PublishSubject<CameraSnapMode> cameraSnapSubject = PublishSubject.create();
+    private final PublishSubject<Boolean> cameraProjectionSubject = PublishSubject.create();
     private final EditorView mainView;
     private Tool tool = Tool.NONE;
 
@@ -57,5 +61,21 @@ public class ToolbarPresenter extends MvpPresenter<ToolbarUi> {
 
     public void toggleRightPanel() {
         mainView.toggleRightPanel();
+    }
+
+    public void setCameraSnap(boolean checked) {
+        cameraSnapSubject.onNext(checked ? CameraSnapMode.TOPDOWN : CameraSnapMode.NONE);
+    }
+
+    public Observable<CameraSnapMode> getCameraSnapObservable() {
+        return cameraSnapSubject;
+    }
+
+    public void setCameraMode(boolean checked) {
+        cameraProjectionSubject.onNext(checked);
+    }
+
+    public Observable<Boolean> getCameraProjectionObservable() {
+        return cameraProjectionSubject;
     }
 }

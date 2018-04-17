@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -14,8 +15,10 @@ public class EditorCameraPlugin extends EditorPlugin implements LoopListener {
 
     private static final float CAM_PAN_SPEED_KEYBOARD = 8f;
     private static final float CAM_PAN_SPEED_MOUSE = 480f;
+    private static final float CAM_PAN_SPEED_MOUSE_PERSPECTIVE = 10f;
     private float camDistance = 100f;
     private int lastDx, lastDy;
+    private CameraSnapMode snapMode = CameraSnapMode.TOPDOWN;
 
     @Override
     public void initialize() {
@@ -39,7 +42,13 @@ public class EditorCameraPlugin extends EditorPlugin implements LoopListener {
 
     @Override
     public boolean scrolled(int amount) {
-        camDistance += ((float) amount) * 3f;
+        final float scrollAmount = ((float) amount) * 3f;
+        this.camDistance += scrollAmount;
+        final Camera cam = EditorCamera.main.getCamera();
+        if (cam instanceof PerspectiveCamera) {
+            final Vector3 d = cam.direction.cpy();
+            cam.position.add(d.scl(-scrollAmount));
+        }
         return super.scrolled(amount);
     }
 
@@ -54,15 +63,18 @@ public class EditorCameraPlugin extends EditorPlugin implements LoopListener {
         int newX = Gdx.input.getX();
         int newY = Gdx.input.getY();
 
-        Vector3 oldScr = cam.unproject(new Vector3(oldX, oldY, 0f));
-        Vector3 newScr = cam.unproject(new Vector3(newX, newY, 0f));
-
-        Vector3 d = oldScr.sub(newScr);
-        cam.translate(d.scl(CAM_PAN_SPEED_MOUSE * dt));
+        if (cam instanceof OrthographicCamera) {
+            Vector3 oldScr = cam.unproject(new Vector3(oldX, oldY, 0f));
+            Vector3 newScr = cam.unproject(new Vector3(newX, newY, 0f));
+            Vector3 d = oldScr.sub(newScr);
+            cam.translate(d.scl(CAM_PAN_SPEED_MOUSE * dt));
+        } else {
+            cam.translate(new Vector3(-dx, dy, 0f).scl(dt * CAM_PAN_SPEED_MOUSE_PERSPECTIVE));
+        }
     }
 
     private void handleOrthographicCamera(float dt, OrthographicCamera cam) {
-        if (camDistance != 0f) {
+        if (camDistance > 0f) {
             cam.zoom = MathUtils.lerp(cam.zoom, camDistance / 100f, dt * 8f);
         }
     }
@@ -110,7 +122,7 @@ public class EditorCameraPlugin extends EditorPlugin implements LoopListener {
 
     private void handleRotation(float dt, Camera cam) {
         Vector3 p = new Vector3(cam.position);
-        Vector3 d = new Vector3(cam.direction).scl(100f);
+        Vector3 d = new Vector3(cam.direction).scl(camDistance);
         p = p.add(d);
 
         boolean shouldRotate = shouldRotate();
@@ -118,12 +130,15 @@ public class EditorCameraPlugin extends EditorPlugin implements LoopListener {
             int dx = shouldRotate ? Gdx.input.getDeltaX() : lastDx;
             int dy = shouldRotate ? Gdx.input.getDeltaY() : lastDy;
 
-            cam.rotateAround(p, Vector3.Y, (float) dx * dt * -20f);
+            cam.rotateAround(p, Vector3.Y, (float) dx * dt * -25f);
+            if (snapMode == CameraSnapMode.NONE) {
+                cam.rotateAround(p, Vector3.X, (float) dy * dt * -25f);
+            }
             cam.up.set(0f, 1f, 0f);
 
             lastDx = (int) (dx * 0.9f);
             lastDy = (int) (dy * 0.9f);
-        } else {
+        } else if (snapMode == CameraSnapMode.TOPDOWN) {
             // Lerp to correct orientation
             Vector2 target = new Vector2();
             if (Math.abs(cam.direction.x) > Math.abs(cam.direction.z)) {
@@ -148,5 +163,19 @@ public class EditorCameraPlugin extends EditorPlugin implements LoopListener {
     private boolean shouldRotate() {
         return Gdx.input.isButtonPressed(Input.Buttons.RIGHT) ||
                 (Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT));
+    }
+
+    public void setCameraSnap(CameraSnapMode snap) {
+        this.snapMode = snap;
+    }
+
+    public void setProjection(Boolean perspective) {
+        if (perspective) {
+            EditorCamera.main.setToPerspective();
+            camDistance /= 2f;
+        } else {
+            EditorCamera.main.setToOrthogonal();
+            camDistance *= 2f;
+        }
     }
 }
