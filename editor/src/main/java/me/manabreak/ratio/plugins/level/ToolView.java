@@ -17,14 +17,13 @@ public class ToolView extends MvpView<ToolPresenter> {
         super(presenter);
 
         add("Tool Settings").padLeft(4f).align(Align.left);
-        row();
+        row().padBottom(4f);
 
         toolSizeSlider = new VisSlider(0f, 5f, 1f, false);
-        toolSizeSlider.setValue(3f);
+        toolSizeSlider.setValue(4f);
         toolSizeLabel = new VisLabel("Cell size: 16");
         toolSizeLabel.setAlignment(Align.left);
         add(toolSizeLabel).padLeft(4f).padRight(4f);
-        row();
         add(toolSizeSlider).growX().padLeft(4f).padRight(4f);
         toolSizeListener = new ChangeListener() {
             @Override
@@ -34,8 +33,8 @@ public class ToolView extends MvpView<ToolPresenter> {
             }
         };
         toolSizeSlider.addListener(toolSizeListener);
-        row().pad(2f);
-        addSeparator();
+        row().pad(4f);
+        addSeparator().colspan(2);
     }
 
     public void updateToolSize(int size) {
