@@ -22,6 +22,8 @@ public class Res {
     public static final String ICON_SELECT = "\uf245";
     public static final String ICON_BOX_CARET_LEFT = "\uf191";
     public static final String ICON_BOX_CARET_RIGHT = "\uf152";
+    public static final String ICON_CAMERA = "\uf030";
+    public static final String ICON_LOCK = "\uf023";
 
     public static void load() {
         VisUI.load(Gdx.files.internal("tinted.json"));

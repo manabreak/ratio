@@ -72,16 +72,6 @@ public class ToolbarUi extends MvpView<ToolbarPresenter> {
 
         addSeparator(true).width(2f);
 
-        /*
-        VisTextButton btnCreate = new VisTextButton("New Object", new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                presenter.createObjectClicked();
-            }
-        });
-        add(btnCreate);
-        */
-
         btnSelect = new VisTextButton(Res.ICON_SELECT, Res.ICONS_SMALL_TOGGLE, new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -90,6 +80,27 @@ public class ToolbarUi extends MvpView<ToolbarPresenter> {
         });
         new Tooltip.Builder("Select objects").target(btnSelect).build();
         add(btnSelect);
+
+        addSeparator(true).width(2f);
+
+        VisTextButton btnCameraSnap = new VisTextButton(Res.ICON_LOCK, Res.ICONS_SMALL_TOGGLE, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                presenter.setCameraSnap(((VisTextButton) actor).isChecked());
+            }
+        });
+        btnCameraSnap.setChecked(true);
+        new Tooltip.Builder("Toggle camera snap").target(btnCameraSnap).build();
+        add(btnCameraSnap);
+
+        VisTextButton btnCameraMode = new VisTextButton(Res.ICON_CAMERA, Res.ICONS_SMALL_TOGGLE, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                presenter.setCameraMode(((VisTextButton) actor).isChecked());
+            }
+        });
+        new Tooltip.Builder("Toggle perspective projection").target(btnCameraMode).build();
+        add(btnCameraMode);
 
         add().expandX();
 
