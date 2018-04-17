@@ -107,10 +107,10 @@ public class LevelMeshCreator {
                             }
                         } else if (item.getType() == Cell.Type.FLOOR) {
                             TextureRegion r = getRegion(tileset, item, TOP);
-                            cv = addVertex(v, cv, x0, y1, z1, r.getU(), r.getV(), 0f, 1f, 0f);
-                            cv = addVertex(v, cv, x0, y1, z0, r.getU(), r.getV2(), 0f, 1f, 0f);
-                            cv = addVertex(v, cv, x1, y1, z0, r.getU2(), r.getV2(), 0f, 1f, 0f);
-                            cv = addVertex(v, cv, x1, y1, z1, r.getU2(), r.getV(), 0f, 1f, 0f);
+                            cv = addVertex(v, cv, x0, y1, z0, r.getU(), r.getV(), 0f, 1f, 0f);
+                            cv = addVertex(v, cv, x0, y1, z1, r.getU(), r.getV2(), 0f, 1f, 0f);
+                            cv = addVertex(v, cv, x1, y1, z1, r.getU2(), r.getV2(), 0f, 1f, 0f);
+                            cv = addVertex(v, cv, x1, y1, z0, r.getU2(), r.getV(), 0f, 1f, 0f);
 
                             inCount += 6;
                         }

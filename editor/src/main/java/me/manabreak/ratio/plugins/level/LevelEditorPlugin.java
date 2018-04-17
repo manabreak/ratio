@@ -295,8 +295,7 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
                             }
                         } else if (tool == Tool.FLOOR) {
                             for (int i = 0; i < line.size(); i += 2) {
-                                // FIXME
-                                // execute(new DrawFloorCommand(this, level, currentRegion, tileset, line.get(i) * cellSize, cellCoord.y, line.get(i + 1) * cellSize, cellSize));
+                                execute(new DrawFloorCommand(this, layerUi.getPresenter().getSelectedLayer(), tilesetPlugin.getCurrentRegion(), tileset, line.get(i) * cellSize, cellCoord.y, line.get(i + 1) * cellSize, cellSize));
                             }
                         }
                     }
