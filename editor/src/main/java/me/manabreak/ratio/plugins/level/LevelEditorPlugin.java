@@ -357,7 +357,7 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
                     break;
             }
         }
-        mouseMoved(screenX, screenY);
+        // mouseMoved(screenX, screenY);
         return true;
     }
 

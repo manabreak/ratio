@@ -1,12 +1,14 @@
-package me.manabreak.ratio.editor;
+package me.manabreak.ratio.plugins.level;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.IntMap;
-import me.manabreak.ratio.plugins.level.*;
+import me.manabreak.ratio.editor.EditorController;
+import me.manabreak.ratio.plugins.objects.ObjectEditorPlugin;
 import me.manabreak.ratio.plugins.tilesets.PaletteTileset;
 import me.manabreak.ratio.plugins.tilesets.TilesetManager;
+import me.manabreak.ratio.plugins.toolbar.Tool;
 import me.manabreak.ratio.test.GdxTest;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -16,7 +18,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LevelEditorPluginTest extends GdxTest {
@@ -53,6 +56,28 @@ public class LevelEditorPluginTest extends GdxTest {
 
         plugin = new LevelEditorPlugin(levelShader, wireframeRenderer, objectRenderer, toolRenderer);
         plugin.editorController = controller;
+    }
+
+    @Test
+    public void testCreateObjectWithClicking() {
+        ObjectEditorPlugin mockObjectEditor = mock(ObjectEditorPlugin.class);
+        when(controller.getPlugin(eq(ObjectEditorPlugin.class))).thenReturn(mockObjectEditor);
+
+        plugin.setTool(Tool.CREATE);
+        plugin.setToolSize(16);
+        plugin.mouseMoved(0, 0);
+
+        plugin.setCellCoord(0, 16, 0);
+        plugin.touchUp(0, 0, 0, Input.Buttons.LEFT);
+        verify(mockObjectEditor).createAt(eq(1), eq(new Coord(0, 16, 0)));
+
+        plugin.setCellCoord(48, 16, 48);
+        plugin.touchUp(0, 0, 0, Input.Buttons.LEFT);
+        verify(mockObjectEditor).createAt(eq(2), eq(new Coord(48, 16, 48)));
+
+        plugin.mouseMoved(0, -64);
+        plugin.touchUp(0, 0, 0, Input.Buttons.LEFT);
+        verify(mockObjectEditor).createAt(eq(3), eq(new Coord(48, 80, 48)));
     }
 
     @Ignore
