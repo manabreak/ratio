@@ -8,12 +8,15 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.kotcrab.vis.ui.widget.VisTable;
 import me.manabreak.ratio.editor.EditorPlugin;
 import me.manabreak.ratio.plugins.camera.EditorCamera;
+import me.manabreak.ratio.plugins.level.Coord;
 
 import java.util.List;
 
 public class ObjectEditorPlugin extends EditorPlugin {
 
     private ObjectEditorUi ui;
+    private Coord startCoord = null;
+    private Coord endCoord = null;
 
     @Override
     public void initialize() {
@@ -57,5 +60,23 @@ public class ObjectEditorPlugin extends EditorPlugin {
     public boolean keyUp(int keycode) {
         ui.getPresenter().onKeyEvent(keycode);
         return super.keyUp(keycode);
+    }
+
+    public void createAt(int createClicks, Coord coord) {
+        switch (createClicks) {
+            case 1:
+                System.out.println("Click 0 at " + coord);
+                startCoord = new Coord(coord.x, coord.y, coord.z);
+                System.out.println("Set start coord at " + startCoord);
+                break;
+            case 2:
+                System.out.println("Click 1 at " + coord);
+                endCoord = new Coord(coord.x, coord.y, coord.z);
+                System.out.println("Set end coord at " + endCoord);
+                break;
+            case 3:
+                getPresenter().createObject(startCoord, coord);
+                break;
+        }
     }
 }

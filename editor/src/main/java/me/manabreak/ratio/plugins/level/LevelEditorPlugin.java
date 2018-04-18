@@ -72,6 +72,9 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
     private TilesetPlugin tilesetPlugin;
     private ToolView toolView;
     private boolean highlightSelectedLayer = true;
+    private int createClicks = 0;
+    private Coord createStart, createEnd;
+    private int createStartY = 0;
 
     public LevelEditorPlugin(LevelShader levelShader,
                              WireframeRenderer wireframeRenderer,
@@ -152,6 +155,19 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
                 break;
             case ERASE:
                 renderer.renderCube(EditorCamera.main.getCamera(), cellCoord, cellSize, RED);
+                break;
+            case CREATE:
+                switch (createClicks) {
+                    case 0:
+                        renderer.renderWireCube(EditorCamera.main.getCamera(), cellCoord, cellSize, Color.SKY);
+                        break;
+                    case 1:
+                        renderer.renderWireCube(EditorCamera.main.getCamera(), createStart, cellCoord, cellSize, Color.SKY);
+                        break;
+                    case 2:
+                        renderer.renderWireCube(EditorCamera.main.getCamera(), createStart, createEnd, cellSize, Color.SKY);
+                        break;
+                }
                 break;
         }
     }
@@ -327,16 +343,38 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
                 case SELECT:
                     handleSelectClick(screenX, screenY);
                     break;
+                case CREATE:
+                    handleCreateClick(screenX, screenY);
+                    break;
             }
         } else {
             switch (tool) {
                 case SELECT:
                     handleSelectClick(screenX, screenY);
                     break;
+                case CREATE:
+                    handleCreateClick(screenX, screenY);
+                    break;
             }
         }
         mouseMoved(screenX, screenY);
         return true;
+    }
+
+    private void handleCreateClick(int x, int y) {
+        createClicks++;
+
+        if (createClicks == 1) {
+            getPlugin(ObjectEditorPlugin.class).createAt(createClicks, cellCoord);
+            createStart = new Coord(cellCoord);
+        } else if (createClicks == 2) {
+            getPlugin(ObjectEditorPlugin.class).createAt(createClicks, cellCoord);
+            createEnd = new Coord(cellCoord);
+            createStartY = y;
+        } else if (createClicks == 3) {
+            getPlugin(ObjectEditorPlugin.class).createAt(createClicks, createEnd);
+            createClicks = 0;
+        }
     }
 
     private void handleSelectClick(int x, int y) {
@@ -347,31 +385,38 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
     public boolean mouseMoved(int x, int y) {
         if (tool == Tool.NONE) return false;
 
+        if (tool == Tool.CREATE && createClicks == 2) {
+            createEnd.y = ((createStartY - y) / 16 + 1) * 16;
+            System.out.println("Height: " + createEnd.y);
+            return false;
+        }
+
         Camera cam = EditorCamera.main.getCamera();
         Ray ray = cam.getPickRay(x, y);
 
-        Tileset tileset = editorController.getTilesetManager().getCurrentTileset();
-        if (tileset == null) return false;
-
         boolean hit = false;
-        if (meshes.size() > 0) {
-            for (Map.Entry<TileLayer, Map<Tileset, Mesh>> layerMapEntry : meshes.entrySet()) {
-                if (!layerMapEntry.getKey().isVisible()) continue;
 
-                for (Mesh mesh : layerMapEntry.getValue().values()) {
-                    if (mesh.getNumVertices() == 0) continue;
+        Tileset tileset = editorController.getTilesetManager().getCurrentTileset();
+        if (tileset != null) {
+            if (meshes.size() > 0) {
+                for (Map.Entry<TileLayer, Map<Tileset, Mesh>> layerMapEntry : meshes.entrySet()) {
+                    if (!layerMapEntry.getKey().isVisible()) continue;
 
-                    float[] vertices = new float[mesh.getNumVertices() * 8];
-                    short[] indices = new short[mesh.getNumIndices()];
-                    mesh.getVertices(vertices);
-                    mesh.getIndices(indices);
-                    int vertexSize = 8;
-                    float minDist = Float.MAX_VALUE;
+                    for (Mesh mesh : layerMapEntry.getValue().values()) {
+                        if (mesh.getNumVertices() == 0) continue;
 
-                    if (findCellByFace(ray, vertices, indices, vertexSize, minDist, hit)) {
-                        extractCellFromFace();
-                        adjustCellForTool();
-                        hit = true;
+                        float[] vertices = new float[mesh.getNumVertices() * 8];
+                        short[] indices = new short[mesh.getNumIndices()];
+                        mesh.getVertices(vertices);
+                        mesh.getIndices(indices);
+                        int vertexSize = 8;
+                        float minDist = Float.MAX_VALUE;
+
+                        if (findCellByFace(ray, vertices, indices, vertexSize, minDist, hit)) {
+                            extractCellFromFace();
+                            adjustCellForTool();
+                            hit = true;
+                        }
                     }
                 }
             }

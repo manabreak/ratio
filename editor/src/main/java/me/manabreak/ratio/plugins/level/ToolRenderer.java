@@ -12,11 +12,41 @@ public class ToolRenderer {
 
     }
 
+    public void renderWireCube(Camera camera, Coord coord, int size, Color color) {
+        renderCube(camera, coord, size, color, ShapeRenderer.ShapeType.Line);
+    }
+
+    public void renderWireCube(Camera camera, Coord start, Coord end, int size, Color color) {
+        float cf = size / 16f;
+        renderer.setProjectionMatrix(camera.combined);
+        renderer.begin(ShapeRenderer.ShapeType.Line);
+        renderer.setColor(color);
+
+        float sx = start.x * cf / size;
+        float sy = start.y * cf / size;
+        float sz = start.z * cf / size;
+
+        float ex = end.x * cf / size;
+        float ey = end.y * cf / size;
+        float ez = end.z * cf / size;
+
+        float s0 = ex - sx + 1;
+        float s1 = ey - sy + 1;
+        float s2 = ez - sz + 1;
+
+        renderer.box(sx, sy, sz, s0, s1, -s2);
+        renderer.end();
+    }
+
     void renderCube(Camera camera, Coord coord, int cellSize, Color color) {
+        renderCube(camera, coord, cellSize, color, ShapeRenderer.ShapeType.Filled);
+    }
+
+    private void renderCube(Camera camera, Coord coord, int cellSize, Color color, ShapeRenderer.ShapeType type) {
         float cf = cellSize / 16f;
         renderer.setProjectionMatrix(camera.combined);
         if (coord.x >= 0 && coord.y >= 0 && coord.z >= 0) {
-            renderer.begin(ShapeRenderer.ShapeType.Filled);
+            renderer.begin(type);
             renderer.setColor(color);
 
             float cx = coord.x * cf / cellSize;

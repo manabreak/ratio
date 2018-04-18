@@ -48,7 +48,7 @@ public class ToolbarPresenter extends MvpPresenter<ToolbarUi> {
     }
 
     public void createObjectClicked() {
-
+        changeTool(Tool.CREATE);
     }
 
     public PublishSubject<Tool> getToolSubject() {

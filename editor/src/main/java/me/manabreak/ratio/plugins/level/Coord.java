@@ -15,6 +15,12 @@ public class Coord {
         this.z = z;
     }
 
+    public Coord(Coord other) {
+        this.x = other.x;
+        this.y = other.y;
+        this.z = other.z;
+    }
+
     @Override
     public String toString() {
         return "X: " + x + ", Y: " + y + ", Z: " + z;
