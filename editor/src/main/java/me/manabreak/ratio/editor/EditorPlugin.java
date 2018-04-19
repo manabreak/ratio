@@ -7,7 +7,7 @@ import com.badlogic.gdx.InputAdapter;
  */
 public abstract class EditorPlugin extends InputAdapter {
 
-    protected EditorController editorController;
+    public EditorController editorController;
     protected EditorView editorView;
     private boolean active = false;
 

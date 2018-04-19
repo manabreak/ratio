@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
 import me.manabreak.ratio.common.mvp.MvpPresenter;
+import me.manabreak.ratio.plugins.level.Coord;
 import me.manabreak.ratio.plugins.properties.PropertyHandler;
 
 import java.util.ArrayList;
@@ -29,6 +30,25 @@ public class ObjectEditorPresenter extends MvpPresenter<ObjectEditorUi> implemen
         System.out.println("Add object clicked");
         GameObject obj = new GameObject();
         obj.setName("GameObject 1");
+        objects.add(obj);
+        adapter.itemsChanged();
+    }
+
+    public void createObject(Coord startCoord, Coord endCoord) {
+        GameObject obj = new GameObject();
+        int minX = Math.min(startCoord.x, endCoord.x) / 16;
+        int maxX = Math.max(startCoord.x, endCoord.x) / 16;
+        int minY = Math.min(startCoord.y, endCoord.y) / 16;
+        int maxY = Math.max(startCoord.y, endCoord.y) / 16;
+        int minZ = Math.min(startCoord.z, endCoord.z) / 16;
+        int maxZ = Math.max(startCoord.z, endCoord.z) / 16;
+
+        System.out.println("Min: " + minX + ", " + minY + ", " + minZ);
+        System.out.println("Max: " + maxX + ", " + maxY + ", " + maxZ);
+
+        obj.setPosition(minX, minY, minZ);
+        obj.setSize(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
+        obj.setName("GameObject");
         objects.add(obj);
         adapter.itemsChanged();
     }

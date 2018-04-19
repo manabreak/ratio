@@ -81,6 +81,15 @@ public class ToolbarUi extends MvpView<ToolbarPresenter> {
         new Tooltip.Builder("Select objects").target(btnSelect).build();
         add(btnSelect);
 
+        VisTextButton btnCreate = new VisTextButton(Res.ICON_CREATE, Res.ICONS_SMALL_TOGGLE, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                presenter.createObjectClicked();
+            }
+        });
+        new Tooltip.Builder("Create an object").target(btnCreate).build();
+        add(btnCreate);
+
         addSeparator(true).width(2f);
 
         VisTextButton btnCameraSnap = new VisTextButton(Res.ICON_LOCK, Res.ICONS_SMALL_TOGGLE, new ChangeListener() {
