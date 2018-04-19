@@ -330,6 +330,7 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
             switch (tool) {
                 case BLOCK:
                     execute(new DrawBlockCommand(this, layerUi.getPresenter().getSelectedLayer(), tilesetPlugin.getCurrentRegion(), tileset, cellCoord.x, cellCoord.y, cellCoord.z, cellSize));
+                    mouseMoved(screenX, screenY);
                     break;
                 case FLOOR:
                     execute(new DrawFloorCommand(this, layerUi.getPresenter().getSelectedLayer(), tilesetPlugin.getCurrentRegion(), tileset, cellCoord.x, cellCoord.y, cellCoord.z, cellSize));
@@ -339,6 +340,7 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
                     break;
                 case ERASE:
                     execute(new EraseBlockCommand(this, layerUi.getPresenter().getSelectedLayer(), tilesetPlugin.getCurrentRegion(), tileset, cellCoord.x, cellCoord.y, cellCoord.z, cellSize));
+                    mouseMoved(screenX, screenY);
                     break;
                 case SELECT:
                     handleSelectClick(screenX, screenY);

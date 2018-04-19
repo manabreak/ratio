@@ -78,6 +78,12 @@ public class LevelEditorPluginTest extends GdxTest {
         plugin.mouseMoved(0, -64);
         plugin.touchUp(0, 0, 0, Input.Buttons.LEFT);
         verify(mockObjectEditor).createAt(eq(3), eq(new Coord(48, 80, 48)));
+
+        // Verify that the create tool was reset correctly after the third click
+        reset(mockObjectEditor);
+        plugin.setCellCoord(0, 16, 0);
+        plugin.touchUp(0, 0, 0, Input.Buttons.LEFT);
+        verify(mockObjectEditor).createAt(eq(1), eq(new Coord(0, 16, 0)));
     }
 
     @Ignore
