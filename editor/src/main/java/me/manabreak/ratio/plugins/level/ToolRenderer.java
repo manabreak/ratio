@@ -22,13 +22,21 @@ public class ToolRenderer {
         renderer.begin(ShapeRenderer.ShapeType.Line);
         renderer.setColor(color);
 
-        float sx = start.x * cf / size;
-        float sy = start.y * cf / size;
-        float sz = start.z * cf / size;
+        int minX = Math.min(start.x, end.x);
+        int minY = Math.min(start.y, end.y);
+        int minZ = Math.min(start.z, end.z);
 
-        float ex = end.x * cf / size;
-        float ey = end.y * cf / size;
-        float ez = end.z * cf / size;
+        int maxX = Math.max(start.x, end.x);
+        int maxY = Math.max(start.y, end.y);
+        int maxZ = Math.max(start.z, end.z);
+
+        float sx = minX * cf / size;
+        float sy = minY * cf / size;
+        float sz = minZ * cf / size;
+
+        float ex = maxX * cf / size;
+        float ey = maxY * cf / size;
+        float ez = maxZ * cf / size;
 
         float s0 = ex - sx + 1;
         float s1 = ey - sy + 1;
