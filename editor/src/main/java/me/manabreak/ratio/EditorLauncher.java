@@ -13,6 +13,7 @@ public class EditorLauncher {
 
         config.width = 1600;
         config.height = 900;
+        config.title = "Ratio Editor";
         // config.x = 2000;
 
         File f = new File("ui");
