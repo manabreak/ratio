@@ -398,26 +398,28 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
 
         boolean hit = false;
 
-        Tileset tileset = editorController.getTilesetManager().getCurrentTileset();
-        if (tileset != null) {
-            if (meshes.size() > 0) {
-                for (Map.Entry<TileLayer, Map<Tileset, Mesh>> layerMapEntry : meshes.entrySet()) {
-                    if (!layerMapEntry.getKey().isVisible()) continue;
+        if (tool.category() != Tool.Category.OBJECT) {
+            Tileset tileset = editorController.getTilesetManager().getCurrentTileset();
+            if (tileset != null) {
+                if (meshes.size() > 0) {
+                    for (Map.Entry<TileLayer, Map<Tileset, Mesh>> layerMapEntry : meshes.entrySet()) {
+                        if (!layerMapEntry.getKey().isVisible()) continue;
 
-                    for (Mesh mesh : layerMapEntry.getValue().values()) {
-                        if (mesh.getNumVertices() == 0) continue;
+                        for (Mesh mesh : layerMapEntry.getValue().values()) {
+                            if (mesh.getNumVertices() == 0) continue;
 
-                        float[] vertices = new float[mesh.getNumVertices() * 8];
-                        short[] indices = new short[mesh.getNumIndices()];
-                        mesh.getVertices(vertices);
-                        mesh.getIndices(indices);
-                        int vertexSize = 8;
-                        float minDist = Float.MAX_VALUE;
+                            float[] vertices = new float[mesh.getNumVertices() * 8];
+                            short[] indices = new short[mesh.getNumIndices()];
+                            mesh.getVertices(vertices);
+                            mesh.getIndices(indices);
+                            int vertexSize = 8;
+                            float minDist = Float.MAX_VALUE;
 
-                        if (findCellByFace(ray, vertices, indices, vertexSize, minDist, hit)) {
-                            extractCellFromFace();
-                            adjustCellForTool();
-                            hit = true;
+                            if (findCellByFace(ray, vertices, indices, vertexSize, minDist, hit)) {
+                                extractCellFromFace();
+                                adjustCellForTool();
+                                hit = true;
+                            }
                         }
                     }
                 }
