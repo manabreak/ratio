@@ -11,6 +11,7 @@ import me.manabreak.ratio.editor.PluginManager;
 import me.manabreak.ratio.plugins.camera.EditorCameraPlugin;
 import me.manabreak.ratio.plugins.exporters.ExportManager;
 import me.manabreak.ratio.plugins.exporters.GdxJsonExporter;
+import me.manabreak.ratio.plugins.files.FileWatcherPlugin;
 import me.manabreak.ratio.plugins.importers.GdxJsonImporter;
 import me.manabreak.ratio.plugins.importers.ImportManager;
 import me.manabreak.ratio.plugins.level.*;
@@ -40,7 +41,9 @@ public class EditorGame extends Game {
 
     private Screen createGameScreen() {
         PluginManager pluginManager = new PluginManager();
+        final FileWatcherPlugin fileWatcherPlugin = new FileWatcherPlugin();
         pluginManager.register(
+                fileWatcherPlugin,
                 new ToolbarPlugin(),
                 new EditorCameraPlugin(),
                 new EditorGrid(),
@@ -50,6 +53,8 @@ public class EditorGame extends Game {
                 new LayerPropertiesPlugin(),
                 new TilesetPlugin()
         );
+
+        tilesetManager.setFileWatcher(fileWatcherPlugin);
 
         ExportManager exportManager = new ExportManager();
         exportManager.register(
