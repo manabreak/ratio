@@ -79,6 +79,7 @@ public class GdxJsonExporter implements Exporter {
             JsonValue jsonLayer = new JsonValue(JsonValue.ValueType.object);
             jsonLayer.addChild("name", new JsonValue(layer.getName()));
             jsonLayer.addChild("visible", new JsonValue(layer.isVisible()));
+            writeProperties(level, layer.getProperties(), jsonLayer);
 
             JsonValue jsonParts = new JsonValue(JsonValue.ValueType.array);
             for (Tileset tileset : layer.getParts().keySet()) {

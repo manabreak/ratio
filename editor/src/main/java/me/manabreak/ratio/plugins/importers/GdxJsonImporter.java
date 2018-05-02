@@ -60,6 +60,7 @@ public class GdxJsonImporter implements Importer {
         for (JsonValue jsonLayer : layers) {
             TileLayer layer = level.createLayer(jsonLayer.getString("name"));
             layer.setVisible(jsonLayer.getBoolean("visible", true));
+            readProperties(jsonLayer, layer.getProperties());
 
             JsonValue parts = jsonLayer.get("parts");
             for (JsonValue part : parts) {

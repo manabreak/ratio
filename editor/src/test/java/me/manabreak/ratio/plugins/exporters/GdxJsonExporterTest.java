@@ -82,6 +82,9 @@ public class GdxJsonExporterTest {
         Level level = new Level();
         final TileLayer layer = level.createLayer("Test");
 
+        // Set up properties for the layer
+        layer.getProperties().setProperty("LayerIntProperty", 12345);
+
         // Draw few tiles with image tileset
         layer.draw(imageTileset, 0, 0, 0, 16);
         layer.draw(imageTileset, 16, 0, 0, 16);
@@ -129,6 +132,14 @@ public class GdxJsonExporterTest {
         assertEquals(1, layers.size);
 
         JsonValue layerJson = layers.get(0);
+        assertTrue(layerJson.has("properties"));
+        assertEquals(1, layerJson.get("properties").size);
+
+        JsonValue layerProperty = layerJson.get("properties").get(0);
+        assertEquals("LayerIntProperty", layerProperty.getString("key"));
+        assertEquals("int", layerProperty.getString("type"));
+        assertEquals(12345, layerProperty.getInt("value"));
+
         assertTrue(layerJson.has("parts"));
         assertEquals(2, layerJson.get("parts").size);
 
