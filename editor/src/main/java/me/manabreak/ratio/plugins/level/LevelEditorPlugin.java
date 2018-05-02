@@ -15,6 +15,7 @@ import me.manabreak.ratio.editor.EditorPlugin;
 import me.manabreak.ratio.editor.LoopListener;
 import me.manabreak.ratio.plugins.camera.EditorCamera;
 import me.manabreak.ratio.plugins.objects.ObjectEditorPlugin;
+import me.manabreak.ratio.plugins.properties.LayerPropertiesPlugin;
 import me.manabreak.ratio.plugins.scene.EditorGrid;
 import me.manabreak.ratio.plugins.tilesets.Tileset;
 import me.manabreak.ratio.plugins.tilesets.TilesetPlugin;
@@ -111,6 +112,10 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
     public void postInitialize() {
         grid = getPlugin(EditorGrid.class);
         tilesetPlugin = getPlugin(TilesetPlugin.class);
+
+        LayerPropertiesPlugin layerPropertiesPlugin = getPlugin(LayerPropertiesPlugin.class);
+        layerUi.getPresenter().getLayerSelectedSubject()
+                .subscribe(layer -> layerPropertiesPlugin.getPresenter().layerSelected(layer));
     }
 
     @Override

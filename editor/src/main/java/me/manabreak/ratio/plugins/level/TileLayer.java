@@ -1,5 +1,6 @@
 package me.manabreak.ratio.plugins.level;
 
+import me.manabreak.ratio.common.Properties;
 import me.manabreak.ratio.plugins.tilesets.Tileset;
 
 import java.util.LinkedHashMap;
@@ -9,6 +10,7 @@ public class TileLayer {
     private final Map<Tileset, Octree<Cell>> parts = new LinkedHashMap<>();
     private String name;
     private boolean visible = true;
+    private Properties properties = new Properties();
 
     public TileLayer(String name) {
         this.name = name;
@@ -112,5 +114,9 @@ public class TileLayer {
 
         final Integer i = cell.get(face);
         return tileset.getTile(i);
+    }
+
+    public Properties getProperties() {
+        return properties;
     }
 }

@@ -3,11 +3,22 @@ package me.manabreak.ratio.plugins.properties;
 import com.badlogic.gdx.math.Vector3;
 import me.manabreak.ratio.common.Properties;
 import me.manabreak.ratio.common.mvp.MvpPresenter;
+import me.manabreak.ratio.plugins.level.TileLayer;
 
-public class LevelPropertiesPresenter extends MvpPresenter<LevelPropertiesUi> implements PropertyHandler {
+public class LayerPropertiesPresenter extends MvpPresenter<LayerPropertiesUi> implements PropertyHandler {
 
-    private Properties properties = new Properties();
+    private Properties properties;
     private PropertyAdapter adapter;
+
+    public void layerSelected(TileLayer layer) {
+        if (layer == null) {
+            this.properties = null;
+            view.clearProperties();
+        } else {
+            this.properties = layer.getProperties();
+            view.showProperties(properties);
+        }
+    }
 
     public void createBooleanProperty(String key) {
         properties.setProperty(key, true);
@@ -37,15 +48,6 @@ public class LevelPropertiesPresenter extends MvpPresenter<LevelPropertiesUi> im
 
     public void removeProperty(String key) {
         properties.removeProperty(key);
-        view.showProperties(properties);
-    }
-
-    public Properties getProperties() {
-        return properties;
-    }
-
-    public void loadProperties(Properties properties) {
-        this.properties = properties;
         view.showProperties(properties);
     }
 }

@@ -15,6 +15,7 @@ import me.manabreak.ratio.plugins.importers.GdxJsonImporter;
 import me.manabreak.ratio.plugins.importers.ImportManager;
 import me.manabreak.ratio.plugins.level.*;
 import me.manabreak.ratio.plugins.objects.ObjectEditorPlugin;
+import me.manabreak.ratio.plugins.properties.LayerPropertiesPlugin;
 import me.manabreak.ratio.plugins.properties.LevelPropertiesPlugin;
 import me.manabreak.ratio.plugins.scene.EditorGrid;
 import me.manabreak.ratio.plugins.tilesets.TilesetManager;
@@ -46,6 +47,7 @@ public class EditorGame extends Game {
                 new LevelEditorPlugin(new LevelShader(), new WireframeRenderer(), new ObjectRenderer(new ShapeRenderer(), new SpriteBatch(), new BitmapFont()), new ToolRenderer()),
                 new ObjectEditorPlugin(),
                 new LevelPropertiesPlugin(),
+                new LayerPropertiesPlugin(),
                 new TilesetPlugin()
         );
 

@@ -86,4 +86,8 @@ public class LayerPresenter extends MvpPresenter<LayerUi> {
         this.adapter = new LayerListAdapter(this, level.getLayers());
         view.createListView(adapter);
     }
+
+    public PublishSubject<TileLayer> getLayerSelectedSubject() {
+        return layerSelectedSubject;
+    }
 }

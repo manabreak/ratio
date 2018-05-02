@@ -9,7 +9,7 @@ public class LevelPropertiesPlugin extends EditorPlugin {
     @Override
     public void initialize() {
         ui = new LevelPropertiesUi(new LevelPropertiesPresenter());
-        editorView.addLeftPanelTab("Properties", ui);
+        editorView.addLeftPanelTab("Map", ui);
     }
 
     public LevelPropertiesPresenter getPresenter() {
