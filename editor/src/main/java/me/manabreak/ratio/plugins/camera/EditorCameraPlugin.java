@@ -122,7 +122,7 @@ public class EditorCameraPlugin extends EditorPlugin implements LoopListener {
 
     private void handleRotation(float dt, Camera cam) {
         Vector3 p = new Vector3(cam.position);
-        Vector3 d = new Vector3(cam.direction).scl(100f);
+        Vector3 d = new Vector3(cam.direction).scl(cam instanceof OrthographicCamera ? 100f : camDistance);
         p = p.add(d);
 
         boolean shouldRotate = shouldRotate();

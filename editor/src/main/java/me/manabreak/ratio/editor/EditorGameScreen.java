@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.TextureData;
 import me.manabreak.ratio.plugins.camera.EditorCamera;
 import me.manabreak.ratio.plugins.exporters.ExportManager;
 import me.manabreak.ratio.plugins.importers.ImportManager;

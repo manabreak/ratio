@@ -44,8 +44,10 @@ public class EditorGrid extends EditorPlugin implements LoopListener {
 
         Camera camera = EditorCamera.main.getCamera();
         Gdx.gl20.glEnable(GL20.GL_BLEND);
+        Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
         Gdx.gl20.glEnable(GL20.GL_DEPTH_TEST);
-        Gdx.gl20.glDepthFunc(GL20.GL_LEQUAL);
+        Gdx.gl20.glDepthFunc(GL20.GL_LESS);
         renderer.begin(ShapeRenderer.ShapeType.Line);
         renderer.setProjectionMatrix(camera.combined);
 
@@ -60,8 +62,8 @@ public class EditorGrid extends EditorPlugin implements LoopListener {
         }
 
         renderer.set(ShapeRenderer.ShapeType.Filled);
-        renderer.setColor(1f, 1f, 1f, 0.07f);
-        renderer.box(0f, y, 0f, GRID_DISTANCE, -0.1f, -GRID_DISTANCE);
+        renderer.setColor(1f, 1f, 1f, 0.15f);
+        renderer.box(0f, y, 0f, GRID_DISTANCE, -0.01f, -GRID_DISTANCE);
         renderer.end();
 
         Gdx.gl20.glClear(GL20.GL_DEPTH_BUFFER_BIT);

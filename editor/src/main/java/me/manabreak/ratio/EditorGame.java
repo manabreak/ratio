@@ -46,11 +46,11 @@ public class EditorGame extends Game {
                 fileWatcherPlugin,
                 new ToolbarPlugin(),
                 new EditorCameraPlugin(),
-                new EditorGrid(),
                 new LevelEditorPlugin(new LevelShader(), new WireframeRenderer(), new ObjectRenderer(new ShapeRenderer(), new SpriteBatch(), new BitmapFont()), new ToolRenderer()),
                 new ObjectEditorPlugin(),
                 new LevelPropertiesPlugin(),
                 new LayerPropertiesPlugin(),
+                new EditorGrid(),
                 new TilesetPlugin()
         );
 

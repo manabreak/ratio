@@ -123,6 +123,7 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
         Gdx.gl20.glDepthFunc(GL20.GL_LEQUAL);
         Gdx.gl20.glEnable(GL20.GL_DEPTH_TEST);
         Gdx.gl20.glCullFace(GL20.GL_BACK);
+
         renderMeshes();
         renderObjects();
 
@@ -178,8 +179,6 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
     }
 
     private void renderMeshes() {
-        Gdx.gl20.glDepthMask(true);
-        Gdx.gl20.glEnable(GL20.GL_DEPTH_TEST);
         Gdx.gl20.glDisable(GL20.GL_BLEND);
 
         if (wireframe) {
@@ -218,8 +217,6 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
             }
             levelShader.end();
         }
-
-        Gdx.gl20.glEnable(GL20.GL_BLEND);
     }
 
     private void renderObjects() {

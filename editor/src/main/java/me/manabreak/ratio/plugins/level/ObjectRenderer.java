@@ -74,11 +74,11 @@ public class ObjectRenderer {
     private void renderObjects(Camera camera, List<GameObject> objects) {
         if (mode == ObjectRenderMode.None) return;
 
-        Gdx.gl20.glEnable(GL20.GL_DEPTH_TEST);
-        Gdx.gl20.glDepthFunc(GL20.GL_LEQUAL);
-
-        if (seeThrough) {
-            Gdx.gl20.glClear(GL20.GL_DEPTH_BUFFER_BIT);
+        if (!seeThrough) {
+            Gdx.gl20.glEnable(GL20.GL_DEPTH_TEST);
+            Gdx.gl20.glDepthFunc(GL20.GL_LEQUAL);
+        }else{
+            Gdx.gl20.glDisable(GL20.GL_DEPTH_TEST);
         }
 
         renderer.setProjectionMatrix(camera.combined);
