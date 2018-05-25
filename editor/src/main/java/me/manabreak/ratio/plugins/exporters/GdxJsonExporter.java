@@ -186,6 +186,7 @@ public class GdxJsonExporter implements Exporter {
         jsonFaces.addChild(new JsonValue(cell.get(Face.LEFT)));
         jsonFaces.addChild(new JsonValue(cell.get(Face.RIGHT)));
         jsonFaces.addChild(new JsonValue(cell.get(Face.TOP)));
+        jsonFaces.addChild(new JsonValue(cell.get(Face.BOTTOM)));
         jsonCell.addChild("faces", jsonFaces);
 
         root.addChild(jsonCell);

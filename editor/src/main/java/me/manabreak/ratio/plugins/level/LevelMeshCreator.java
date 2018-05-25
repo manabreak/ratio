@@ -24,7 +24,7 @@ public class LevelMeshCreator {
             Map<Tileset, Octree<Cell>> parts = layer.getParts();
             for (Tileset tileset : parts.keySet()) {
                 Octree<Cell> octree = parts.get(tileset);
-                int faces = octree.getItemCount() * 5;
+                int faces = octree.getItemCount() * 6;
                 int cv = 0;
                 float[] v = new float[faces * 4 * (3 + 2 + 3)];
                 short[] i = new short[faces * 6];
@@ -58,6 +58,7 @@ public class LevelMeshCreator {
                         boolean hasBack = octree.get(x, y, z - size, size) != null;
                         boolean hasLeft = octree.get(x - size, y, z, size) != null;
                         boolean hasRight = octree.get(x + size, y, z, size) != null;
+                        boolean hasBottom = octree.get(x, y - size, z, size) != null;
 
                         if (item.getType() == Cell.Type.BLOCK) {
                             // FRONT
@@ -103,6 +104,15 @@ public class LevelMeshCreator {
                                 cv = addVertex(v, cv, x1, y0, z0, r.getU(), r.getV2(), 0f, 0f, -1f);
                                 cv = addVertex(v, cv, x0, y0, z0, r.getU2(), r.getV2(), 0f, 0f, -1f);
                                 cv = addVertex(v, cv, x0, y1, z0, r.getU2(), r.getV(), 0f, 0f, -1f);
+                                inCount += 6;
+                            }
+                            // BOTTOM
+                            if (!hasBottom) {
+                                TextureRegion r = getRegion(tileset, item, BOTTOM);
+                                cv = addVertex(v, cv, x1, y0, z0, r.getU(), r.getV(), 0f, -1f, 0f);
+                                cv = addVertex(v, cv, x1, y0, z1, r.getU(), r.getV2(), 0f, -1f, 0f);
+                                cv = addVertex(v, cv, x0, y0, z1, r.getU2(), r.getV2(), 0f, -1f, 0f);
+                                cv = addVertex(v, cv, x0, y0, z0, r.getU2(), r.getV(), 0f, -1f, 0f);
                                 inCount += 6;
                             }
                         } else if (item.getType() == Cell.Type.FLOOR) {

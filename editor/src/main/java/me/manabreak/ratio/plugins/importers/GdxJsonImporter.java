@@ -81,11 +81,12 @@ public class GdxJsonImporter implements Importer {
                         layer.draw(tileset, x, y, z, size);
                     }
                     JsonValue faces = cell.get("faces");
-                    layer.paint(tileset, x, y, z, size, Face.FRONT, tileset.getTile(faces.getInt(0)));
-                    layer.paint(tileset, x, y, z, size, Face.BACK, tileset.getTile(faces.getInt(1)));
-                    layer.paint(tileset, x, y, z, size, Face.LEFT, tileset.getTile(faces.getInt(2)));
-                    layer.paint(tileset, x, y, z, size, Face.RIGHT, tileset.getTile(faces.getInt(3)));
-                    layer.paint(tileset, x, y, z, size, Face.TOP, tileset.getTile(faces.getInt(4)));
+                    if (faces.size > 0) layer.paint(tileset, x, y, z, size, Face.FRONT, tileset.getTile(faces.getInt(0)));
+                    if (faces.size > 1) layer.paint(tileset, x, y, z, size, Face.BACK, tileset.getTile(faces.getInt(1)));
+                    if (faces.size > 2) layer.paint(tileset, x, y, z, size, Face.LEFT, tileset.getTile(faces.getInt(2)));
+                    if (faces.size > 3) layer.paint(tileset, x, y, z, size, Face.RIGHT, tileset.getTile(faces.getInt(3)));
+                    if (faces.size > 4) layer.paint(tileset, x, y, z, size, Face.TOP, tileset.getTile(faces.getInt(4)));
+                    if (faces.size > 5) layer.paint(tileset, x, y, z, size, Face.BOTTOM, tileset.getTile(faces.getInt(5)));
                 }
             }
         }
