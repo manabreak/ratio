@@ -130,10 +130,13 @@ public class EditorCameraPlugin extends EditorPlugin implements LoopListener {
             int dx = shouldRotate ? Gdx.input.getDeltaX() : lastDx;
             int dy = shouldRotate ? Gdx.input.getDeltaY() : lastDy;
 
-            cam.rotateAround(p, Vector3.Y, (float) dx * dt * -25f);
             if (snapMode == CameraSnapMode.NONE) {
-                cam.rotateAround(p, Vector3.X, (float) dy * dt * -25f);
+                Vector2 vx = new Vector2(cam.direction.x, cam.direction.z).nor().rotate90(0);
+                vx.angle();
+                cam.rotateAround(p, new Vector3(vx.x, 0f, vx.y), (float) dy * dt * -25f);
             }
+            cam.rotateAround(p, Vector3.Y, (float) dx * dt * -25f);
+
             cam.up.set(0f, 1f, 0f);
 
             lastDx = (int) (dx * 0.9f);
