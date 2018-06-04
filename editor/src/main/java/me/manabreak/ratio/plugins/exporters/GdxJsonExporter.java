@@ -1,5 +1,6 @@
 package me.manabreak.ratio.plugins.exporters;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.IntMap;
@@ -33,6 +34,8 @@ public class GdxJsonExporter implements Exporter {
     private static final String EXT = "txt";
     private static final String NAME = "LibGDX JSON Text File";
 
+    private FileHandle currentFileHandle = null;
+
     @Override
     public String getFileExtension() {
         return EXT;
@@ -46,7 +49,9 @@ public class GdxJsonExporter implements Exporter {
     @Override
     public void save(Level level, List<GameObject> objects, Properties properties, FileHandle fh) {
         System.out.println("GdxJsonExporter: Saving level to " + fh.toString());
+        currentFileHandle = fh;
         fh.writeString(getJsonString(level, objects, properties), false);
+        currentFileHandle = null;
     }
 
     private String getJsonString(Level level, List<GameObject> objects, Properties properties) {
@@ -197,7 +202,7 @@ public class GdxJsonExporter implements Exporter {
         jsonTileset.addChild("name", new JsonValue(tileset.getName()));
         jsonTileset.addChild("type", new JsonValue((tileset instanceof PaletteTileset) ? "palette" : "normal"));
 
-        // If palette, write the color indexes
+        // If palette, write the color indexesdesktop
         if (tileset instanceof PaletteTileset) {
             JsonValue paletteEntries = new JsonValue(JsonValue.ValueType.array);
             PaletteTileset pt = (PaletteTileset) tileset;
@@ -215,7 +220,12 @@ public class GdxJsonExporter implements Exporter {
             jsonTileset.addChild("colors", paletteEntries);
         } else if (tileset instanceof ImageTileset) {
             ImageTileset it = (ImageTileset) tileset;
-            jsonTileset.addChild("path", new JsonValue(it.getPath()));
+            String path = it.getPath();
+            String parentPath = currentFileHandle.parent().path();
+            if (path.startsWith(parentPath) && path.length() > parentPath.length() + 1) {
+                path = path.substring(parentPath.length() + 1);
+            }
+            jsonTileset.addChild("path", new JsonValue(path));
         }
 
         // Tile data
