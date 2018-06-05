@@ -29,6 +29,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -56,13 +57,18 @@ public class GdxJsonExporterTest {
     private GdxJsonExporter exporter;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         exporter = new GdxJsonExporter();
+
+        FileHandle parentFh = mock(FileHandle.class);
+        when(parentFh.path()).thenReturn("/home/ratio");
+        when(fh.parent()).thenReturn(parentFh);
 
         IntMap<Tile> tilemap = new IntMap<>();
         tilemap.put(1, new Tile(1, imageRegion));
         tilemap.put(2, new Tile(2, imageRegion));
         when(imageTileset.getTiles()).thenReturn(tilemap);
+        when(imageTileset.getPath()).thenReturn("/home/ratio/tilesets/tileset.png");
 
         Map<PaletteTileset.Tuple, Color> paletteEntries = new HashMap<>();
         paletteEntries.put(new PaletteTileset.Tuple(0, 0), new Color(1f, 0f, 0f, 1f));
