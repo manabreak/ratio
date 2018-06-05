@@ -6,10 +6,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Plane;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
 import me.manabreak.ratio.editor.EditorPlugin;
 import me.manabreak.ratio.editor.LoopListener;
@@ -198,6 +195,18 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
 
             for (TileLayer layer : level.getLayers()) {
                 if (!layer.isVisible()) continue;
+
+                LayerProperties properties = layer.getProperties();
+                int offsetX = properties.getOffsetX();
+                int offsetY = properties.getOffsetY();
+                int offsetZ = properties.getOffsetZ();
+
+                if (offsetX != 0 || offsetY != 0 || offsetZ != 0) {
+                    Matrix4 m = new Matrix4(new Vector3(offsetX, offsetY, offsetZ), new Quaternion(), new Vector3(1f, 1f, 1f));
+                    levelShader.setUniformMatrix("u_world", m);
+                } else {
+                    levelShader.setUniformMatrix("u_world", new Matrix4());
+                }
 
                 if (highlightSelectedLayer) {
                     if (layerUi.getPresenter().getSelectedLayer() == layer) {

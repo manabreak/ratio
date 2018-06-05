@@ -25,13 +25,15 @@ public class PropertyAdapter extends ArrayListAdapter<Properties.Entry, VisTable
     protected VisTable createView(Properties.Entry item) {
         VisTable t = new VisTable();
 
-        final VisTextButton btnDelete = new VisTextButton(Res.ICON_DELETE, Res.ICONS_SMALL, new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                if (deleteCallback != null) deleteCallback.call(item);
-            }
-        });
-        t.add(btnDelete).size(20f).padRight(2f);
+        if (item.canDelete()) {
+            final VisTextButton btnDelete = new VisTextButton(Res.ICON_DELETE, Res.ICONS_SMALL, new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    if (deleteCallback != null) deleteCallback.call(item);
+                }
+            });
+            t.add(btnDelete).size(20f).padRight(2f);
+        }
 
         t.add(item.getKey()).width(140f);
 

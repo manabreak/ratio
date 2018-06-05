@@ -7,6 +7,7 @@ public class LevelShader extends ShaderProgram {
     private static final String SHADER_VERTEX = "attribute vec4 a_position;\n" +
             "attribute vec2 a_texCoord0;\n" +
             "attribute vec3 a_normal;\n" +
+            "uniform mat4 u_world;\n" +
             "uniform mat4 u_projTrans;\n" +
             "varying vec2 v_texCoords;\n" +
             "varying vec3 v_normal;\n" +
@@ -14,7 +15,7 @@ public class LevelShader extends ShaderProgram {
             "void main() {\n" +
             "    v_texCoords = a_texCoord0;\n" +
             "    v_normal = a_normal;\n" +
-            "    gl_Position = u_projTrans * a_position;\n" +
+            "    gl_Position = u_projTrans * u_world * a_position;\n" +
             "}";
     private static final String SHADER_FRAGMENT = "varying vec2 v_texCoords;\n" +
             "varying vec3 v_normal;\n" +

@@ -10,7 +10,7 @@ public class TileLayer {
     private final Map<Tileset, Octree<Cell>> parts = new LinkedHashMap<>();
     private String name;
     private boolean visible = true;
-    private Properties properties = new Properties();
+    private LayerProperties properties = new LayerProperties();
 
     public TileLayer(String name) {
         this.name = name;
@@ -116,7 +116,7 @@ public class TileLayer {
         return tileset.getTile(i);
     }
 
-    public Properties getProperties() {
+    public LayerProperties getProperties() {
         return properties;
     }
 }
