@@ -139,9 +139,12 @@ public class GdxJsonExporterTest {
 
         JsonValue layerJson = layers.get(0);
         assertTrue(layerJson.has("properties"));
-        assertEquals(1, layerJson.get("properties").size);
+        assertEquals(4, layerJson.get("properties").size);
 
-        JsonValue layerProperty = layerJson.get("properties").get(0);
+        assertEquals("offset_x", layerJson.get("properties").get(0).getString("key"));
+        assertEquals("offset_y", layerJson.get("properties").get(1).getString("key"));
+        assertEquals("offset_z", layerJson.get("properties").get(2).getString("key"));
+        JsonValue layerProperty = layerJson.get("properties").get(3);
         assertEquals("LayerIntProperty", layerProperty.getString("key"));
         assertEquals("int", layerProperty.getString("type"));
         assertEquals(12345, layerProperty.getInt("value"));
