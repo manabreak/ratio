@@ -17,19 +17,13 @@ public class ToolbarPlugin extends EditorPlugin {
     @Override
     public void postInitialize() {
         toolbarUi.getPresenter().getToolSubject()
-                .subscribe(tool -> {
-                    getPlugin(LevelEditorPlugin.class).setTool(tool);
-                });
+                .subscribe(tool -> getPlugin(LevelEditorPlugin.class).setTool(tool));
 
         toolbarUi.getPresenter().getCameraSnapObservable()
-                .subscribe(snap -> {
-                    getPlugin(EditorCameraPlugin.class).setCameraSnap(snap);
-                });
+                .subscribe(snap -> getPlugin(EditorCameraPlugin.class).setCameraSnap(snap));
 
         toolbarUi.getPresenter().getCameraProjectionObservable()
-                .subscribe(perspective -> {
-                    getPlugin(EditorCameraPlugin.class).setProjection(perspective);
-                });
+                .subscribe(perspective -> getPlugin(EditorCameraPlugin.class).setProjection(perspective));
     }
 
     public ToolbarPresenter getPresenter() {

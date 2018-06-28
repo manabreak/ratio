@@ -13,7 +13,7 @@ public class ShortcutProcessor extends InputAdapter {
     private boolean controlDown;
     private boolean shiftDown;
 
-    public ShortcutProcessor(EditorController controller, EditorStage stage) {
+    ShortcutProcessor(EditorController controller, EditorStage stage) {
         this.controller = controller;
         this.stage = stage;
     }
@@ -50,6 +50,7 @@ public class ShortcutProcessor extends InputAdapter {
             case O:
                 if (controlDown) {
                     controller.onOpenClicked();
+                    controlDown = false;
                 } else {
                     controller.getPlugin(LevelEditorPlugin.class).getObjectRenderer().rotateDrawMode();
                 }
@@ -61,8 +62,13 @@ public class ShortcutProcessor extends InputAdapter {
                 break;
             case S:
                 if (controlDown) {
-                    if (shiftDown) controller.onSaveAsClicked();
-                    else controller.onSaveClicked();
+                    if (shiftDown) {
+                        controller.onSaveAsClicked();
+                        shiftDown = false;
+                    } else {
+                        controller.onSaveClicked();
+                    }
+                    controlDown = false;
                 } else {
                     controller.getPlugin(ToolbarPlugin.class).getUi().onSelectToolClicked();
                 }
@@ -82,7 +88,7 @@ public class ShortcutProcessor extends InputAdapter {
             case SHIFT_LEFT:
             case SHIFT_RIGHT:
                 shiftDown = false;
-                controller.getPlugin(LevelEditorPlugin.class).unengageLineTool();
+                controller.getPlugin(LevelEditorPlugin.class).disengageLineTool();
         }
 
         return false;

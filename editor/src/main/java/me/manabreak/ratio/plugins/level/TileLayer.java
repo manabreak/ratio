@@ -105,7 +105,7 @@ public class TileLayer {
         this.visible = visible;
     }
 
-    public Tile getTile(Tileset tileset, int x, int y, int z, int size, Face face) {
+    Tile getTile(Tileset tileset, int x, int y, int z, int size, Face face) {
         final Octree<Cell> part = getPart(tileset);
         if (part == null) return null;
 
@@ -120,7 +120,7 @@ public class TileLayer {
         return properties;
     }
 
-    public void nudge(int i) {
+    void nudge(int i) {
         for (Octree<Cell> octree : getParts().values()) {
             List<Cell> cells = octree.flatten();
             for (Cell cell : cells) {

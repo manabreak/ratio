@@ -268,7 +268,7 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
         lineStartSet = false;
     }
 
-    public void unengageLineTool() {
+    public void disengageLineTool() {
         lineToolEngaged = false;
         lineStartSet = false;
     }

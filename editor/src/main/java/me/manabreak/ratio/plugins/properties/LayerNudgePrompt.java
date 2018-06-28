@@ -2,7 +2,6 @@ package me.manabreak.ratio.plugins.properties;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.dialog.InputDialogAdapter;
@@ -22,7 +21,7 @@ public class LayerNudgePrompt extends ChangeListener {
     public void changed(ChangeEvent event, Actor actor) {
         Dialogs.InputDialog dialog = new Dialogs.InputDialog("Nudge", "Y", true, input -> {
             try {
-                int i = Integer.parseInt(input);
+                Integer.parseInt(input);
                 return true;
             } catch (NumberFormatException ignored) {
 
