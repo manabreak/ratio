@@ -316,13 +316,14 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
                     Tileset tileset = editorController.getTilesetManager().getCurrentTileset();
                     if (tileset != null) {
                         List<Integer> line = LineUtils.bresenham(lineToolStartX / cellSize, lineToolStartZ / cellSize, cellCoord.x / cellSize, cellCoord.z / cellSize);
+                        TileLayer layer = layerUi.getPresenter().getSelectedLayer();
                         if (tool == Tool.BLOCK) {
                             for (int i = 0; i < line.size(); i += 2) {
-                                execute(new DrawBlockCommand(this, layerUi.getPresenter().getSelectedLayer(), tilesetPlugin.getCurrentRegion(), tileset, line.get(i) * cellSize, cellCoord.y, line.get(i + 1) * cellSize, cellSize));
+                                execute(new DrawBlockCommand(this, layer, tilesetPlugin.getCurrentRegion(), tileset, line.get(i) * cellSize, cellCoord.y, line.get(i + 1) * cellSize, cellSize));
                             }
                         } else if (tool == Tool.FLOOR) {
                             for (int i = 0; i < line.size(); i += 2) {
-                                execute(new DrawFloorCommand(this, layerUi.getPresenter().getSelectedLayer(), tilesetPlugin.getCurrentRegion(), tileset, line.get(i) * cellSize, cellCoord.y, line.get(i + 1) * cellSize, cellSize));
+                                execute(new DrawFloorCommand(this, layer, tilesetPlugin.getCurrentRegion(), tileset, line.get(i) * cellSize, cellCoord.y, line.get(i + 1) * cellSize, cellSize));
                             }
                         }
                     }

@@ -58,6 +58,7 @@ public class TileLayer {
     }
 
     private void addCell(int x, int y, int z, int size, Octree<Cell> part) {
+        if (part.get(x, y, z, size) != null) return;
         Cell cell = new Cell(x, y, z);
         cell.setSize(size);
         part.insert(x, y, z, size, cell);
