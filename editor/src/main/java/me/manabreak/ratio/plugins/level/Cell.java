@@ -63,6 +63,10 @@ public class Cell {
         this.size = size;
     }
 
+    public void nudge(int i) {
+        this.y += i * 16;
+    }
+
     public enum Type {
         BLOCK,
         FLOOR

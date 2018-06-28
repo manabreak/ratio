@@ -11,6 +11,7 @@ import com.kotcrab.vis.ui.widget.MenuBar;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import me.manabreak.ratio.editor.EditorController;
 import me.manabreak.ratio.plugins.level.LevelEditorPlugin;
+import me.manabreak.ratio.plugins.properties.LayerNudgePrompt;
 
 public class EditorMenuBar extends MenuBar {
 
@@ -22,6 +23,16 @@ public class EditorMenuBar extends MenuBar {
         this.controller = controller;
         addMenu(createFileMenu());
         addMenu(createOptionsMenu());
+        addMenu(createLayerMenu());
+    }
+
+    private Menu createLayerMenu() {
+        Menu menu = new Menu("Layer");
+
+        MenuItem itemNudge = new MenuItem("Nudge layer...", new LayerNudgePrompt(stage, controller));
+        menu.addItem(itemNudge);
+
+        return menu;
     }
 
     private Menu createOptionsMenu() {

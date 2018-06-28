@@ -595,4 +595,9 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
     public void toggleLayerHighlighting() {
         this.highlightSelectedLayer = !this.highlightSelectedLayer;
     }
+
+    public void nudgeSelectedLayerBy(int i) {
+        layerUi.getPresenter().getSelectedLayer().nudge(i);
+        recreateMeshes();
+    }
 }

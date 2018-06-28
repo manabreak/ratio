@@ -1,9 +1,9 @@
 package me.manabreak.ratio.plugins.level;
 
-import me.manabreak.ratio.common.Properties;
 import me.manabreak.ratio.plugins.tilesets.Tileset;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TileLayer {
@@ -118,5 +118,18 @@ public class TileLayer {
 
     public LayerProperties getProperties() {
         return properties;
+    }
+
+    public void nudge(int i) {
+        for (Octree<Cell> octree : getParts().values()) {
+            List<Cell> cells = octree.flatten();
+            for (Cell cell : cells) {
+                octree.remove(cell.getX(), cell.getY(), cell.getZ(), cell.getSize());
+            }
+            for (Cell cell : cells) {
+                cell.nudge(i);
+                octree.insert(cell.getX(), cell.getY(), cell.getZ(), cell.getSize(), cell);
+            }
+        }
     }
 }
