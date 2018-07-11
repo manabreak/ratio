@@ -2,6 +2,7 @@ package me.manabreak.ratio.plugins.level;
 
 import me.manabreak.ratio.plugins.tilesets.Tileset;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,6 +132,30 @@ public class TileLayer {
                 cell.nudge(i);
                 octree.insert(cell.getX(), cell.getY(), cell.getZ(), cell.getSize(), cell);
             }
+        }
+    }
+
+    public void setSize(int size) {
+        for (Map.Entry<Tileset, Octree<Cell>> entry : getParts().entrySet()) {
+            Octree<Cell> octree = entry.getValue();
+
+            int rootLevel = 0;
+            while (size > 1) {
+                rootLevel++;
+                size /= 2;
+            }
+            Octree<Cell> newTree = new Octree<>(Integer.highestOneBit(rootLevel));
+            for (Cell cell : octree.flatten()) {
+                int x = cell.getX();
+                int y = cell.getY();
+                int z = cell.getZ();
+                int s = cell.getSize();
+                if (x + s < size && y + s < size && z + s < size) {
+                    newTree.insert(x, y, z, s, cell);
+                }
+            }
+
+            entry.setValue(newTree);
         }
     }
 }

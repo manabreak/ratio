@@ -40,12 +40,12 @@ public class LevelMeshCreator {
 
                     Cell item = tree.getItem();
                     if (item != null) {
-                        float s = item.getSize() / 16f;
-                        float x0 = item.getX() / 16f;
+                        float s = item.getSize();
+                        float x0 = item.getX();
                         float x1 = x0 + s;
-                        float y0 = item.getY() / 16f;
+                        float y0 = item.getY();
                         float y1 = y0 + s;
-                        float z0 = item.getZ() / 16f;
+                        float z0 = item.getZ();
                         float z1 = z0 + s;
 
                         int x = item.getX();

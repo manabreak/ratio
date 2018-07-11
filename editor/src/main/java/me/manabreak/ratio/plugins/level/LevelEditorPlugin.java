@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
+import me.manabreak.ratio.editor.EditorController;
 import me.manabreak.ratio.editor.EditorPlugin;
 import me.manabreak.ratio.editor.LoopListener;
 import me.manabreak.ratio.plugins.camera.EditorCamera;
@@ -49,13 +50,14 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
     private final LevelMeshCreator creator = new LevelMeshCreator();
     private final Deque<Command> commands = new ArrayDeque<>();
     private final Deque<Command> redoCommands = new ArrayDeque<>();
+    private LevelEditorMode editorMode = new DrawMode(this);
     private Vector3 lightDirection = new Vector3(-1f, -2f, -3f).nor();
     private float ambientIntensity = 0.2f;
     private EditorGrid grid;
     private Level level = new Level();
     private int xzPlane = 1;
-    private int cellSize = 16;
-    private float cf = cellSize / 16f;
+    private int cellSize = 1;
+    private float cf = 1f;
     private Tool tool = Tool.NONE;
     private Face currentFace = Face.FRONT;
     private boolean wireframe;
@@ -73,6 +75,7 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
     private int createClicks = 0;
     private Coord createStart, createEnd;
     private int createStartY = 0;
+    private int worldSize = Integer.MAX_VALUE;
 
     public LevelEditorPlugin(LevelShader levelShader,
                              WireframeRenderer wireframeRenderer,
@@ -99,7 +102,7 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
         final ToolPresenter toolPresenter = new ToolPresenter();
         toolPresenter.getToolSizeObservable().subscribe(size -> {
             this.cellSize = size;
-            this.cf = size / 16f;
+            this.cf = (float) size;
         });
         toolView = new ToolView(toolPresenter);
         editorView.setToolView(toolView);
@@ -273,7 +276,7 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
         lineStartSet = false;
     }
 
-    public void execute(Command command) {
+    void execute(Command command) {
         command.execute();
         commands.push(command);
         redoCommands.clear();
@@ -282,7 +285,7 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
         }
     }
 
-    public void undo() {
+    void undo() {
         System.out.println("Undo 1");
         if (commands.size() > 0) {
             System.out.println("Undo 2");
@@ -292,7 +295,7 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
         }
     }
 
-    public void redo() {
+    void redo() {
         System.out.println("Redo 1");
         if (redoCommands.size() > 0) {
             System.out.println("Redo 2");
@@ -304,78 +307,10 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if (button == Input.Buttons.LEFT && cellCoord.x >= 0 && cellCoord.y >= 0 && cellCoord.z >= 0) {
-            if (lineToolEngaged) {
-                if (!lineStartSet) {
-                    System.out.println("Setting line start to " + cellCoord);
-                    lineToolStartX = cellCoord.x;
-                    lineToolStartY = cellCoord.y;
-                    lineToolStartZ = cellCoord.z;
-                    lineStartSet = true;
-                } else {
-                    Tileset tileset = editorController.getTilesetManager().getCurrentTileset();
-                    if (tileset != null) {
-                        List<Integer> line = LineUtils.bresenham(lineToolStartX / cellSize, lineToolStartZ / cellSize, cellCoord.x / cellSize, cellCoord.z / cellSize);
-                        TileLayer layer = layerUi.getPresenter().getSelectedLayer();
-                        if (tool == Tool.BLOCK) {
-                            for (int i = 0; i < line.size(); i += 2) {
-                                execute(new DrawBlockCommand(this, layer, tilesetPlugin.getCurrentRegion(), tileset, line.get(i) * cellSize, cellCoord.y, line.get(i + 1) * cellSize, cellSize));
-                            }
-                        } else if (tool == Tool.FLOOR) {
-                            for (int i = 0; i < line.size(); i += 2) {
-                                execute(new DrawFloorCommand(this, layer, tilesetPlugin.getCurrentRegion(), tileset, line.get(i) * cellSize, cellCoord.y, line.get(i + 1) * cellSize, cellSize));
-                            }
-                        }
-                    }
-                    lineToolEngaged = false;
-                }
-            } else {
-                return handleNormalClick(screenX, screenY);
-            }
-        }
-        return false;
+        return editorMode.touchUp(screenX, screenY, button);
     }
 
-    private boolean handleNormalClick(int screenX, int screenY) {
-        Tileset tileset = editorController.getTilesetManager().getCurrentTileset();
-        if (tileset != null) {
-            switch (tool) {
-                case BLOCK:
-                    execute(new DrawBlockCommand(this, layerUi.getPresenter().getSelectedLayer(), tilesetPlugin.getCurrentRegion(), tileset, cellCoord.x, cellCoord.y, cellCoord.z, cellSize));
-                    mouseMoved(screenX, screenY);
-                    break;
-                case FLOOR:
-                    execute(new DrawFloorCommand(this, layerUi.getPresenter().getSelectedLayer(), tilesetPlugin.getCurrentRegion(), tileset, cellCoord.x, cellCoord.y, cellCoord.z, cellSize));
-                    break;
-                case PAINT:
-                    execute(new PaintCommand(this, layerUi.getPresenter().getSelectedLayer(), tilesetPlugin.getCurrentRegion(), tileset, cellCoord.x, cellCoord.y, cellCoord.z, cellSize, currentFace));
-                    break;
-                case ERASE:
-                    execute(new EraseBlockCommand(this, layerUi.getPresenter().getSelectedLayer(), tilesetPlugin.getCurrentRegion(), tileset, cellCoord.x, cellCoord.y, cellCoord.z, cellSize));
-                    mouseMoved(screenX, screenY);
-                    break;
-                case SELECT:
-                    handleSelectClick(screenX, screenY);
-                    break;
-                case CREATE:
-                    handleCreateClick(screenX, screenY);
-                    break;
-            }
-        } else {
-            switch (tool) {
-                case SELECT:
-                    handleSelectClick(screenX, screenY);
-                    break;
-                case CREATE:
-                    handleCreateClick(screenX, screenY);
-                    break;
-            }
-        }
-        // mouseMoved(screenX, screenY);
-        return true;
-    }
-
-    private void handleCreateClick(int x, int y) {
+    void handleCreateClick(int x, int y) {
         createClicks++;
 
         if (createClicks == 1) {
@@ -391,61 +326,17 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
         }
     }
 
-    private void handleSelectClick(int x, int y) {
+    void handleSelectClick(int x, int y) {
         getPlugin(ObjectEditorPlugin.class).selectAt(x, y);
     }
 
     @Override
     public boolean mouseMoved(int x, int y) {
-        if (tool == Tool.NONE) return false;
 
-        if (tool == Tool.CREATE && createClicks == 2) {
-            createEnd.y = ((createStartY - y) / 16 + 1) * 16;
-            System.out.println("Height: " + createEnd.y);
-            return false;
-        }
-
-        Camera cam = EditorCamera.main.getCamera();
-        Ray ray = cam.getPickRay(x, y);
-
-        boolean hit = false;
-
-        if (tool.category() != Tool.Category.OBJECT) {
-            Tileset tileset = editorController.getTilesetManager().getCurrentTileset();
-            if (tileset != null) {
-                if (meshes.size() > 0) {
-                    for (Map.Entry<TileLayer, Map<Tileset, Mesh>> layerMapEntry : meshes.entrySet()) {
-                        if (!layerMapEntry.getKey().isVisible()) continue;
-
-                        for (Mesh mesh : layerMapEntry.getValue().values()) {
-                            if (mesh.getNumVertices() == 0) continue;
-
-                            float[] vertices = new float[mesh.getNumVertices() * 8];
-                            short[] indices = new short[mesh.getNumIndices()];
-                            mesh.getVertices(vertices);
-                            mesh.getIndices(indices);
-                            int vertexSize = 8;
-                            float minDist = Float.MAX_VALUE;
-
-                            if (findCellByFace(ray, vertices, indices, vertexSize, minDist, hit)) {
-                                extractCellFromFace();
-                                adjustCellForTool();
-                                hit = true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!hit && tool != Tool.PAINT && Intersector.intersectRayPlane(ray, new Plane(Vector3.Y, -xzPlane), tmp0)) {
-            findCellOnGrid(cam);
-        }
-
-        return false;
+        return editorMode.mouseMoved(x, y);
     }
 
-    private void extractCellFromFace() {
+    void extractCellFromFace() {
         float v = cf / 2f - 0.0001f;
         cellCoord.x = Math.round((best.x - v) / cf) * cellSize;
         cellCoord.y = Math.round((best.y - v) / cf) * cellSize;
@@ -472,7 +363,7 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
      * drawing and erasing tool needs to take the next cell along
      * the targeted face's normal.
      */
-    private void adjustCellForTool() {
+    void adjustCellForTool() {
         switch (tool) {
             case BLOCK:
                 switch (currentFace) {
@@ -496,7 +387,7 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
         }
     }
 
-    private void findCellOnGrid(Camera cam) {
+    void findCellOnGrid(Camera cam) {
         cellCoord.x = Math.round((tmp0.x - cf / 2f - 0.0001f) / cf) * cellSize;
         cellCoord.y = Math.round((tmp0.y - cf / 2f) / cf) * cellSize;
         cellCoord.z = Math.round((tmp0.z - cf / 2f - 0.0001f) / cf) * cellSize;
@@ -521,7 +412,7 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
         }
     }
 
-    private boolean findCellByFace(Ray ray, float[] vertices, short[] indices, int vertexSize, float minDist, boolean hit) {
+    boolean findCellByFace(Ray ray, float[] vertices, short[] indices, int vertexSize, float minDist, boolean hit) {
         for (int i = 0; i < indices.length; i += 3) {
             int i1 = indices[i] * vertexSize;
             int i2 = indices[i + 1] * vertexSize;
@@ -542,11 +433,6 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
             }
         }
         return hit;
-    }
-
-    public void setToolSize(int size) {
-        this.cellSize = size;
-        this.cf = cellSize / 16f;
     }
 
     public Level getLevel() {
@@ -571,7 +457,7 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
         this.ambientIntensity = MathUtils.clamp(f, 0f, 1f);
     }
 
-    public void recreateMeshes() {
+    void recreateMeshes() {
         meshes = creator.create(level);
     }
 
@@ -587,6 +473,15 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
         } else {
             this.tool = tool;
         }
+
+        switch (this.tool) {
+            case BLOCK:
+                this.editorMode = new DrawMode(this);
+                break;
+            case APPEND:
+                this.editorMode = new AppendMode(this);
+                break;
+        }
     }
 
     public ObjectRenderer getObjectRenderer() {
@@ -600,5 +495,110 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
     public void nudgeSelectedLayerBy(int i) {
         layerUi.getPresenter().getSelectedLayer().nudge(i);
         recreateMeshes();
+    }
+
+    Coord getCellCoord() {
+        return cellCoord;
+    }
+
+    boolean isLineToolEngaged() {
+        return lineToolEngaged;
+    }
+
+    boolean isLineStartSet() {
+        return lineStartSet;
+    }
+
+    void setLineToolStartX(int x) {
+        this.lineToolStartX = x;
+    }
+
+    void setLineToolStartY(int y) {
+        this.lineToolStartY = y;
+    }
+
+    void setLineToolStartZ(int z) {
+        this.lineToolStartZ = z;
+    }
+
+    void setLineStartSet(boolean b) {
+        lineStartSet = b;
+    }
+
+    EditorController getEditorController() {
+        return editorController;
+    }
+
+    int getLineToolStartX() {
+        return lineToolStartX;
+    }
+
+    int getLineToolStartY() {
+        return lineToolStartY;
+    }
+
+    int getLineToolStartZ() {
+        return lineToolStartZ;
+    }
+
+    int getCellSize() {
+        return cellSize;
+    }
+
+    LayerUi getLayerUi() {
+        return layerUi;
+    }
+
+    Tool getTool() {
+        return tool;
+    }
+
+    TilesetPlugin getTilesetPlugin() {
+        return tilesetPlugin;
+    }
+
+    void setLineToolEngaged(boolean engaged) {
+        this.lineToolEngaged = engaged;
+    }
+
+    Face getCurrentFace() {
+        return currentFace;
+    }
+
+    int getCreateClicks() {
+        return createClicks;
+    }
+
+    Coord getCreateEnd() {
+        return createEnd;
+    }
+
+    int getCreateStartY() {
+        return createStart.y;
+    }
+
+    Map<TileLayer, Map<Tileset, Mesh>> getMeshes() {
+        return meshes;
+    }
+
+    int getXzPlane() {
+        return xzPlane;
+    }
+
+    Vector3 getTmp0() {
+        return tmp0;
+    }
+
+    public void useAppendMode() {
+        this.editorMode = new AppendMode(this);
+    }
+
+    public void resizeWorld(int size) {
+        this.worldSize = size;
+        level.setSize(worldSize);
+    }
+
+    public int getWorldSize() {
+        return worldSize;
     }
 }

@@ -35,7 +35,12 @@ public enum Tool {
     /**
      * Create objects
      */
-    CREATE(Category.OBJECT);
+    CREATE(Category.OBJECT),
+
+    /**
+     * "Append" mode for drawing voxels
+     */
+    APPEND(Category.VOXEL);
 
     private final Category category;
 

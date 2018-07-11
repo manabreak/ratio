@@ -133,4 +133,9 @@ public class EditorController implements PluginHost {
             e.printStackTrace();
         }
     }
+
+    public void setWorldSize(int size) {
+        getPlugin(LevelEditorPlugin.class)
+                .resizeWorld(size);
+    }
 }

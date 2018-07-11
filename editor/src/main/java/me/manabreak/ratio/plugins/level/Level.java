@@ -56,4 +56,10 @@ public class Level {
     public List<Tileset> getTilesets() {
         return tilesets;
     }
+
+    public void setSize(int size) {
+        for (TileLayer layer : layers) {
+            layer.setSize(size);
+        }
+    }
 }

@@ -17,7 +17,7 @@ public class ToolRenderer {
     }
 
     public void renderWireCube(Camera camera, Coord start, Coord end, int size, Color color) {
-        float cf = size / 16f;
+        float cf = (float) size;
         renderer.setProjectionMatrix(camera.combined);
         renderer.begin(ShapeRenderer.ShapeType.Line);
         renderer.setColor(color);
@@ -51,7 +51,7 @@ public class ToolRenderer {
     }
 
     private void renderCube(Camera camera, Coord coord, int cellSize, Color color, ShapeRenderer.ShapeType type) {
-        float cf = cellSize / 16f;
+        float cf = (float) cellSize;
         renderer.setProjectionMatrix(camera.combined);
         if (coord.x >= 0 && coord.y >= 0 && coord.z >= 0) {
             renderer.begin(type);
@@ -66,7 +66,7 @@ public class ToolRenderer {
     }
 
     public void renderFace(Camera camera, Coord coord, int cellSize, Face face) {
-        float cf = cellSize / 16f;
+        float cf = (float) cellSize;
         renderer.setProjectionMatrix(camera.combined);
         if (coord.x >= 0 && coord.y >= 0 && coord.z >= 0) {
             renderer.begin(ShapeRenderer.ShapeType.Line);

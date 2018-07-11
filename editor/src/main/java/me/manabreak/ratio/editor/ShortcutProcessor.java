@@ -73,6 +73,10 @@ public class ShortcutProcessor extends InputAdapter {
                     controller.getPlugin(ToolbarPlugin.class).getUi().onSelectToolClicked();
                 }
                 break;
+            case R:
+                controller.getPlugin(LevelEditorPlugin.class)
+                        .useAppendMode();
+                break;
         }
 
         return false;

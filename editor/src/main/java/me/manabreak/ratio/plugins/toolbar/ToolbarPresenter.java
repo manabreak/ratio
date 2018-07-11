@@ -31,6 +31,10 @@ public class ToolbarPresenter extends MvpPresenter<ToolbarUi> {
         changeTool(Tool.BLOCK);
     }
 
+    public void appendToolSelected() {
+        changeTool(Tool.APPEND);
+    }
+
     public void floorToolSelected() {
         changeTool(Tool.FLOOR);
     }

@@ -21,7 +21,7 @@ public class ToolView extends MvpView<ToolPresenter> {
 
         toolSizeSlider = new VisSlider(0f, 5f, 1f, false);
         toolSizeSlider.setValue(4f);
-        toolSizeLabel = new VisLabel("Cell size: 16");
+        toolSizeLabel = new VisLabel("Cell size: 1");
         toolSizeLabel.setAlignment(Align.left);
         add(toolSizeLabel).padLeft(4f).padRight(4f);
         add(toolSizeSlider).growX().padLeft(4f).padRight(4f);

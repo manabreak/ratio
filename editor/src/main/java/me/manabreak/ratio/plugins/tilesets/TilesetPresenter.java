@@ -15,7 +15,6 @@ public class TilesetPresenter extends MvpPresenter<TilesetUi> {
     private final PublishSubject<Boolean> automapSubject = PublishSubject.create();
     private final PublishSubject<TextureRegion> regionSubject = PublishSubject.create();
 
-    private int toolSize = 16;
     private int tileWidth = 16, tileHeight = 16;
     private TextureRegion currentRegion;
 

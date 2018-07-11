@@ -8,7 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.kotcrab.vis.ui.util.InputValidator;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.InputDialogAdapter;
+import com.kotcrab.vis.ui.util.dialog.InputDialogListener;
 import com.kotcrab.vis.ui.widget.MenuBar;
+import com.kotcrab.vis.ui.widget.VisDialog;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
@@ -81,6 +86,22 @@ public class EditorStage extends Stage implements EditorView {
         // mainContent.add(bottomPanel).colspan(3).growX().height(32f);
 
         root.pack();
+
+        Dialogs.showInputDialog(this, "New", "Size", true, input -> {
+            if (input.length() == 0) return false;
+            if (input.startsWith("-")) return false;
+            try {
+                int size = Integer.parseInt(input);
+                return size >= 16 && Integer.bitCount(size) == 1;
+            } catch (NumberFormatException ignored) {
+                return false;
+            }
+        }, new InputDialogAdapter() {
+            @Override
+            public void finished(String input) {
+                controller.setWorldSize(Integer.parseInt(input));
+            }
+        });
     }
 
     @Override

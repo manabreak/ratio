@@ -13,6 +13,7 @@ public class ToolbarUi extends MvpView<ToolbarPresenter> {
 
     private final ButtonGroup<VisTextButton> group;
     private final VisTextButton btnBlock;
+    private final VisTextButton btnAppend;
     private final VisTextButton btnFloor;
     private final VisTextButton btnPaint;
     private final VisTextButton btnErase;
@@ -42,6 +43,15 @@ public class ToolbarUi extends MvpView<ToolbarPresenter> {
         });
         new Tooltip.Builder("Draw blocks").target(btnBlock).build();
         add(btnBlock);
+
+        btnAppend = new VisTextButton(Res.ICON_BLOCK, Res.ICONS_SMALL_TOGGLE, new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                presenter.appendToolSelected();
+            }
+        });
+        new Tooltip.Builder("Append blocks").target(btnAppend).build();
+        add(btnAppend);
 
         btnFloor = new VisTextButton(Res.ICON_FLOOR, Res.ICONS_SMALL_TOGGLE, new ChangeListener() {
             @Override
@@ -122,7 +132,7 @@ public class ToolbarUi extends MvpView<ToolbarPresenter> {
         new Tooltip.Builder("Hide / show panel").target(btnHideRightPanel).build();
         add(btnHideRightPanel);
 
-        group = new ButtonGroup<>(btnBlock, btnFloor, btnPaint, btnErase, btnSelect);
+        group = new ButtonGroup<>(btnBlock, btnAppend, btnFloor, btnPaint, btnErase, btnSelect);
         group.setMinCheckCount(0);
         group.setMaxCheckCount(1);
     }

@@ -36,12 +36,12 @@ public class ObjectEditorPresenter extends MvpPresenter<ObjectEditorUi> implemen
 
     public void createObject(Coord startCoord, Coord endCoord) {
         GameObject obj = new GameObject();
-        int minX = Math.min(startCoord.x, endCoord.x) / 16;
-        int maxX = Math.max(startCoord.x, endCoord.x) / 16;
-        int minY = Math.min(startCoord.y, endCoord.y) / 16;
-        int maxY = Math.max(startCoord.y, endCoord.y) / 16;
-        int minZ = Math.min(startCoord.z, endCoord.z) / 16;
-        int maxZ = Math.max(startCoord.z, endCoord.z) / 16;
+        int minX = Math.min(startCoord.x, endCoord.x);
+        int maxX = Math.max(startCoord.x, endCoord.x);
+        int minY = Math.min(startCoord.y, endCoord.y);
+        int maxY = Math.max(startCoord.y, endCoord.y);
+        int minZ = Math.min(startCoord.z, endCoord.z);
+        int maxZ = Math.max(startCoord.z, endCoord.z);
 
         System.out.println("Min: " + minX + ", " + minY + ", " + minZ);
         System.out.println("Max: " + maxX + ", " + maxY + ", " + maxZ);

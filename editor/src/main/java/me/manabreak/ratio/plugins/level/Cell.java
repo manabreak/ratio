@@ -64,7 +64,7 @@ public class Cell {
     }
 
     public void nudge(int i) {
-        this.y += i * 16;
+        this.y += i;
     }
 
     public enum Type {
