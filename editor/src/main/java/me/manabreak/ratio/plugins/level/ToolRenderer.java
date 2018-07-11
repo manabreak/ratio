@@ -12,12 +12,11 @@ public class ToolRenderer {
 
     }
 
-    public void renderWireCube(Camera camera, Coord coord, int size, Color color) {
+    void renderWireCube(Camera camera, Coord coord, int size, Color color) {
         renderCube(camera, coord, size, color, ShapeRenderer.ShapeType.Line);
     }
 
-    public void renderWireCube(Camera camera, Coord start, Coord end, int size, Color color) {
-        float cf = (float) size;
+    void renderWireCube(Camera camera, Coord start, Coord end, Color color) {
         renderer.setProjectionMatrix(camera.combined);
         renderer.begin(ShapeRenderer.ShapeType.Line);
         renderer.setColor(color);
@@ -30,19 +29,11 @@ public class ToolRenderer {
         int maxY = Math.max(start.y, end.y);
         int maxZ = Math.max(start.z, end.z);
 
-        float sx = minX * cf / size;
-        float sy = minY * cf / size;
-        float sz = minZ * cf / size;
+        float s0 = (float) maxX - (float) minX + 1;
+        float s1 = (float) maxY - (float) minY + 1;
+        float s2 = (float) maxZ - (float) minZ + 1;
 
-        float ex = maxX * cf / size;
-        float ey = maxY * cf / size;
-        float ez = maxZ * cf / size;
-
-        float s0 = ex - sx + 1;
-        float s1 = ey - sy + 1;
-        float s2 = ez - sz + 1;
-
-        renderer.box(sx, sy, sz, s0, s1, -s2);
+        renderer.box((float) minX, (float) minY, (float) minZ, s0, s1, -s2);
         renderer.end();
     }
 
@@ -57,24 +48,24 @@ public class ToolRenderer {
             renderer.begin(type);
             renderer.setColor(color);
 
-            float cx = coord.x * cf / cellSize;
-            float cy = coord.y * cf / cellSize;
-            float cz = coord.z * cf / cellSize;
+            float cx = coord.x;
+            float cy = coord.y;
+            float cz = coord.z;
             renderer.box(cx, cy, cz + cf, cf, cf, cf);
             renderer.end();
         }
     }
 
-    public void renderFace(Camera camera, Coord coord, int cellSize, Face face) {
+    void renderFace(Camera camera, Coord coord, int cellSize, Face face) {
         float cf = (float) cellSize;
         renderer.setProjectionMatrix(camera.combined);
         if (coord.x >= 0 && coord.y >= 0 && coord.z >= 0) {
             renderer.begin(ShapeRenderer.ShapeType.Line);
             renderer.setColor(1f, 0f, 1f, 1f);
 
-            float cx = coord.x * cf / cellSize;
-            float cy = coord.y * cf / cellSize;
-            float cz = coord.z * cf / cellSize;
+            float cx = coord.x;
+            float cy = coord.y;
+            float cz = coord.z;
 
             switch (face) {
                 case FRONT:

@@ -168,10 +168,10 @@ public class LevelEditorPlugin extends EditorPlugin implements LoopListener {
                         renderer.renderWireCube(EditorCamera.main.getCamera(), cellCoord, cellSize, Color.SKY);
                         break;
                     case 1:
-                        renderer.renderWireCube(EditorCamera.main.getCamera(), createStart, cellCoord, cellSize, Color.SKY);
+                        renderer.renderWireCube(EditorCamera.main.getCamera(), createStart, cellCoord, Color.SKY);
                         break;
                     case 2:
-                        renderer.renderWireCube(EditorCamera.main.getCamera(), createStart, createEnd, cellSize, Color.SKY);
+                        renderer.renderWireCube(EditorCamera.main.getCamera(), createStart, createEnd, Color.SKY);
                         break;
                 }
                 break;
